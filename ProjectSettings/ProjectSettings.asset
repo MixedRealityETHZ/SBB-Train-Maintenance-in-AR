@@ -48,6 +48,7 @@ PlayerSettings:
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 1
+  unsupportedMSAAFallback: 0
   m_SpriteBatchVertexThreshold: 300
   m_MTRendering: 1
   mipStripping: 0
@@ -136,7 +137,11 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: c677e5c4eb85b7849a8da406775c299d, type: 2}
+  - {fileID: -719445424682059129, guid: 17e5362fda164894db6f4d6ea78df2a0, type: 2}
+  - {fileID: 11400000, guid: 2f5589085c1e57b4193cfb0dd458d93f, type: 2}
+  - {fileID: 5902397264068275437, guid: 331d7a0f913572d49917d23031af0da9, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
