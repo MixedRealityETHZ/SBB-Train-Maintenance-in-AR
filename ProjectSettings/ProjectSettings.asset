@@ -161,7 +161,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.GMSV.SBB-Mixed-Reality-MRTK3
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -683,11 +684,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: group.gmsv.sbb-mr-mrtk3
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: GMSV
+  metroCertificateIssuer: GMSV
+  metroCertificateNotAfter: 80937ae8272adb01
   metroApplicationDescription: SBB Mixed Reality MRTK3
   wsaImages: {}
   metroTileShortName: SBB Mixed Reality MRTK3
@@ -708,7 +709,7 @@ PlayerSettings:
       PrivateNetworkClientServer: True
       InternetClientServer: True
       SpatialPerception: True
-      InternetClient: False
+      InternetClient: True
       WebCam: True
       Microphone: True
   metroTargetDeviceFamilies:
