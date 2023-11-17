@@ -6,28 +6,18 @@ using UnityEngine;
 
 public class HolographicRemoteConnect : MonoBehaviour
 {
-    [SerializeField]
-    private string IP;
+    [SerializeField] private string IP;
 
-    private bool connected = false;
-
-    [SerializeField, Tooltip("The configuration information for the remote connection.")]
+    [SerializeField] [Tooltip("The configuration information for the remote connection.")]
     private RemotingConnectConfiguration remotingConfiguration = new() { RemotePort = 8265, MaxBitrateKbps = 20000 };
 
-    public void Connect()
-    {
-        connected = true;
-
-        remotingConfiguration.RemoteHostName = IP;
-
-        AppRemoting.StartConnectingToPlayer(remotingConfiguration);
-    }
+    private bool connected;
 
     private void OnGUI()
     {
         IP = GUI.TextField(new Rect(10, 10, 200, 30), IP, 25);
 
-        string buttonText = connected ? "Disconnect" : "Connect";
+        var buttonText = connected ? "Disconnect" : "Connect";
 
         if (GUI.Button(new Rect(220, 10, 100, 30), buttonText))
         {
@@ -43,5 +33,14 @@ public class HolographicRemoteConnect : MonoBehaviour
 
             Debug.Log(buttonText);
         }
+    }
+
+    public void Connect()
+    {
+        connected = true;
+
+        remotingConfiguration.RemoteHostName = IP;
+
+        AppRemoting.StartConnectingToPlayer(remotingConfiguration);
     }
 }

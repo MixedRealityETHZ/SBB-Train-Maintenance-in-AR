@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class ToggleButton : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject ClippingObject;
+    [SerializeField] private GameObject ClippingObject;
 
     public void ToggleClipping()
     {
