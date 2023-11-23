@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AzureObjectAnchors.unity
     guid: 8a5794ef519731f49bee826c2b441bd4
+  - enabled: 0
+    path: Assets/MixedReality.AzureObjectAnchors/Scenes/AOASampleScene.unity
+    guid: 93583f6d85e54a348a9e1eee15761f1c
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 2f5589085c1e57b4193cfb0dd458d93f, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 17e5362fda164894db6f4d6ea78df2a0, type: 2}

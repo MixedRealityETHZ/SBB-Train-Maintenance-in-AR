@@ -57,6 +57,7 @@ public class TextLogger : MonoBehaviour
     /// </summary>
     public static void LogRaw(string message)
     {
+        Debug.Log(message);
         while (Instance._messageQueue.Count >= MaxMessageCountToShow)
         {
             string _message;

@@ -13,8 +13,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.IO;
 
-using Microsoft.Azure.ObjectAnchors.Unity;
-
 #if WINDOWS_UWP
 using Windows.Storage;
 using Windows.Storage.Streams;
