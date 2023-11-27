@@ -46,9 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothingTime: 0.666
-  smoothPosition: {x: 0, y: 0, z: 0}
-  smoothRotation: {x: 0, y: 0, z: 0}
-  smoothScale: {x: 1, y: 1, z: 1}
   smoothingFunction:
     serializedVersion: 2
     m_Curve:
@@ -92,6 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2615667207483363741}
   - component: {fileID: 6073660460617084509}
+  - component: {fileID: 7834022805520273401}
   m_Layer: 0
   m_Name: ObjectOrigin
   m_TagString: Untagged
@@ -111,8 +109,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2898659194315277073}
+  m_Children: []
   m_Father: {fileID: 3729628076028221190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6073660460617084509
@@ -127,65 +124,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfcfbc5e37c055b4882a3e93ec83540e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &2637223590021437531
-PrefabInstance:
+--- !u!114 &7834022805520273401
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2615667207483363741}
-    m_Modifications:
-    - target: {fileID: 569854201466143216, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_Name
-      value: Keyboard
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
---- !u!4 &2898659194315277073 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 910668083857136458, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-  m_PrefabInstance: {fileID: 2637223590021437531}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893464904888664890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d9458ab5a1ef6d4d810d951a9cf2606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualizationPrefabs:
+  - Name: Keyboard
+    VisualizationPrefab: {fileID: 569854201466143216, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
+  - Name: Birb
+    VisualizationPrefab: {fileID: 919132149155446097, guid: f131188860ab46747a65cb4f6168e6f6, type: 3}

@@ -28,6 +28,7 @@ public class CustomObjectSearch : MonoBehaviour
 	private struct InstanceState
 	{
 		public Vector3? Position;
+		public Quaternion? Rotation;
 		public float SurfaceCoverage;
 	}
 
@@ -86,11 +87,13 @@ public class CustomObjectSearch : MonoBehaviour
 	[Tooltip("Maximum expected deviation from vertical orientation in degrees")]
 	public float expectedMaxVerticalOrientationInDegrees;
 
-	[Tooltip("Is the object expected to be standing on the floor")]
-	public bool isExpectedToBeStandingOnGroundPlane;
-
 	[Tooltip("Minimum distance difference for it to be considered a change in position")]
 	public float positionChangeThreshold = 0.1f;
+
+	[Tooltip("Minimum rotation difference in degrees to be considered a change in position")]
+	public float rotationChangeThreshold = 5.0f;
+
+	public ObjectManagerMenu objectManagerMenu;
 
 
 	/// <summary>
@@ -122,6 +125,8 @@ public class CustomObjectSearch : MonoBehaviour
 	private Dictionary<Guid, ObjectQueryState> _objectQueries = new Dictionary<Guid, ObjectQueryState>();
 
 	private Dictionary<Guid, InstanceState> _prevInstanceStates = new();
+
+	private Dictionary<Guid, string> _modelIdToName = new();
 
 	private Dictionary<Guid, ObjectQueryState> InitializeObjectQueries()
 	{
@@ -245,9 +250,11 @@ public class CustomObjectSearch : MonoBehaviour
         {
             foreach (string filePath in FileHelper.GetFilesInDirectory(objects3d.Path, "*.ou"))
             {
-                Debug.Log($"Loading model ({Path.GetFileNameWithoutExtension(filePath)})");
+	            var modelName = Path.GetFileNameWithoutExtension(filePath);
+                Debug.Log($"Loading model ({modelName})");
                 byte[] buffer = await ReadFileBytesAsync(filePath);
-                await _objectAnchorsService.AddObjectModelAsync(buffer);
+                var modelId = await _objectAnchorsService.AddObjectModelAsync(buffer);
+                _modelIdToName[modelId] = modelName;
             }
         }
         catch(UnauthorizedAccessException ex)
@@ -258,9 +265,11 @@ public class CustomObjectSearch : MonoBehaviour
             {
                 if (Path.GetExtension(file.Name) == ".ou")
                 {
-                    Debug.Log($"Loading model ({file.Path} {file.Name}");
+	                var modelName = Path.GetFileNameWithoutExtension(file.Name);
+                    Debug.Log($"Loading model ({modelName})");
                     byte[] buffer = await ReadFileBytesAsync(file);
-                    await _objectAnchorsService.AddObjectModelAsync(buffer);
+                    var modelId = await _objectAnchorsService.AddObjectModelAsync(buffer);
+                    _modelIdToName[modelId] = modelName;
                 }
             }
         }
@@ -279,6 +288,24 @@ public class CustomObjectSearch : MonoBehaviour
 
 			_objectAnchorsService.StartDiagnosticsSession();
 		}
+
+		_objectAnchorsService.Pause();
+	}
+
+	public void StartSearch()
+	{
+		_objectAnchorsService.Resume();
+	}
+
+	public void StopSearch()
+	{
+		_objectAnchorsService.Pause();
+	}
+
+	public void ToggleSearch()
+	{
+		if (_objectAnchorsService.Status == ObjectAnchorsServiceStatus.Paused) StartSearch();
+		else StopSearch();
 	}
 
 	private async void OnDestroy()
@@ -381,7 +408,7 @@ public class CustomObjectSearch : MonoBehaviour
 				case ObjectAnchorsServiceEventKind.Added:
 				{
 					Debug.Log($"{EventArgsFormatter(_event.Args)} added, " +
-					          $"coverage {_event.Args.SurfaceCoverage.ToString("0.00")}, " +
+					          $"coverage {_event.Args.SurfaceCoverage.ToString("0.0000")}, " +
 					          $"position {_event.Args.Location?.Position}, " +
 					          $"rotation {_event.Args.Location?.Orientation}");
 					DrawBoundingBox(_event.Args);
@@ -391,11 +418,13 @@ public class CustomObjectSearch : MonoBehaviour
 				case ObjectAnchorsServiceEventKind.Updated:
 				{
 					Debug.Log($"{EventArgsFormatter(_event.Args)} updated, " +
-					          $"coverage {_event.Args.SurfaceCoverage.ToString("0.00")}, " +
+					          $"coverage {_event.Args.SurfaceCoverage.ToString("0.0000")}, " +
 					          $"position {_event.Args.Location?.Position}, " +
 					          $"rotation {_event.Args.Location?.Orientation}");
 					DrawBoundingBox(_event.Args);
 					PlaceVisualizationMesh(_event.Args, replace: false);
+					objectManagerMenu.AddObject(_event.Args.ModelId, _event.Args.InstanceId,
+						_modelIdToName[_event.Args.ModelId]);
 					break;
 				}
 				case ObjectAnchorsServiceEventKind.Removed:
@@ -406,11 +435,21 @@ public class CustomObjectSearch : MonoBehaviour
 					_objectPlacements.Remove(_event.Args.InstanceId);
 
 					Destroy(placement.gameObject);
+					objectManagerMenu.RemoveObject(_event.Args.ModelId);
 
 					break;
 				}
 			}
 		}
+	}
+
+	public void ResetObject(Guid modelId, Guid instanceId)
+	{
+		_objectAnchorsService.RemoveObjectInstance(instanceId);
+
+		_visualizationMeshes.Remove(modelId, out var mesh);
+		Destroy(mesh);
+		_prevInstanceStates.Remove(modelId);
 	}
 
 	private void PlaceVisualizationMesh(IObjectAnchorsServiceEventArgs instance, bool replace)
@@ -423,7 +462,9 @@ public class CustomObjectSearch : MonoBehaviour
 		// - If mesh already in dict, delete current mesh, create new and replace, update positions
 		var curInstanceState = new InstanceState()
 		{
-			Position = instance.Location?.Position, SurfaceCoverage = instance.SurfaceCoverage
+			Position = instance.Location?.Position,
+			Rotation = instance.Location?.Orientation,
+			SurfaceCoverage = instance.SurfaceCoverage
 		};
 		GameObject visualizationMesh;
 		var found = _visualizationMeshes.TryGetValue(instance.ModelId, out visualizationMesh);
@@ -440,16 +481,51 @@ public class CustomObjectSearch : MonoBehaviour
 			isNew = true;
 			_visualizationMeshes[instance.ModelId] = visualizationMesh;
 			_prevInstanceStates[instance.ModelId] = curInstanceState;
+
+			var modelSwitcher = visualizationMesh.GetComponentInChildren<ModelSwitcher>();
+			modelSwitcher.SetModel(_modelIdToName[instance.ModelId]);
 		}
 
 		// Check if should update position
 		var prevInstanceState = _prevInstanceStates[instance.ModelId];
-		if (!isNew && (prevInstanceState.Position is null || curInstanceState.Position is null ||
-		               prevInstanceState.SurfaceCoverage > curInstanceState.SurfaceCoverage ||
-		               (prevInstanceState.Position.Value - curInstanceState.Position.Value).magnitude <
-		               positionChangeThreshold))
-			return;
 
+		var updateReason = "";
+
+		bool shouldUpdate()
+		{
+			// If it's new update in any case
+			updateReason = "new";
+			if (isNew) return true;
+			// Cannot compute previous state if one of these is null, don't update
+			updateReason = "did not update due to null";
+			if (prevInstanceState.Position is null || curInstanceState.Position is null ||
+			    prevInstanceState.Rotation is null || curInstanceState.Rotation is null) return false;
+			// If we have a better tracking, update
+			updateReason = "surface coverage";
+			if (prevInstanceState.SurfaceCoverage < curInstanceState.SurfaceCoverage) return true;
+			// Position changed enough, update
+			var positionChange = (prevInstanceState.Position.Value - curInstanceState.Position.Value).magnitude;
+			updateReason = $"position change: {positionChange}";
+			if (positionChange > positionChangeThreshold) return true;
+			// Rotation changed enough, update
+			var rotationChange = Quaternion.Angle(prevInstanceState.Rotation.Value, curInstanceState.Rotation.Value);
+			updateReason = $"rotation change: {rotationChange}";
+			if (rotationChange > rotationChangeThreshold) return true;
+			// No other conditions, do not update
+			updateReason = "no update necessary";
+			return false;
+		}
+
+		if (!shouldUpdate())
+		{
+			Debug.Log($"Did not update, reason: {updateReason}");
+			return;
+		}
+
+		Debug.Log(
+			$"{instance.InstanceId}: Updating visualization prefab location, reason: {updateReason}. ({Time.time})");
+
+		// Update position
 		var modelOrigin = visualizationMesh.GetComponentInChildren<ObjectOriginTransform>().transform;
 		var smoothTransform = visualizationMesh.GetComponent<SmoothTransform>();
 
@@ -468,6 +544,8 @@ public class CustomObjectSearch : MonoBehaviour
 		modelOrigin.transform.localRotation =
 			t.rotation * Quaternion.Euler(0, 180f, 0); // Rotate by 180 deg for some reason
 		modelOrigin.transform.localScale = t.lossyScale;
+
+		_prevInstanceStates[instance.ModelId] = curInstanceState;
 	}
 
 	private void DrawBoundingBox(IObjectAnchorsServiceEventArgs instance)
@@ -672,8 +750,7 @@ public class CustomObjectSearch : MonoBehaviour
 				}
 
 				query.MinSurfaceCoverage = minSurfaceCoverage;
-				// query.ExpectedMaxVerticalOrientationInDegrees = expectedMaxVerticalOrientationInDegrees;
-				// query.IsExpectedToBeStandingOnGroundPlane = isExpectedToBeStandingOnGroundPlane;
+				query.ExpectedMaxVerticalOrientationInDegrees = expectedMaxVerticalOrientationInDegrees;
 
 				objectQueries.Add(query);
 			}
