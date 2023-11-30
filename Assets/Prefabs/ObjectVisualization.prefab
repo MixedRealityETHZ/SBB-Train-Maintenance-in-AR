@@ -141,3 +141,9 @@ MonoBehaviour:
     VisualizationPrefab: {fileID: 569854201466143216, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
   - Name: Birb
     VisualizationPrefab: {fileID: 919132149155446097, guid: f131188860ab46747a65cb4f6168e6f6, type: 3}
+  - Name: Shelf
+    VisualizationPrefab: {fileID: 919132149155446097, guid: cc5967e0b7d4f5b4b907e959364c368d, type: 3}
+  - Name: Panel
+    VisualizationPrefab: {fileID: 919132149155446097, guid: fbeccf995071d914e995e41bdf437da7, type: 3}
+  - Name: Drawer
+    VisualizationPrefab: {fileID: 919132149155446097, guid: 84f1b4de9d69f2244ab5cf06e84291ac, type: 3}

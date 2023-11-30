@@ -93,6 +93,10 @@ public class CustomObjectSearch : MonoBehaviour
 	[Tooltip("Minimum rotation difference in degrees to be considered a change in position")]
 	public float rotationChangeThreshold = 5.0f;
 
+	[Tooltip("Tracking mode for new instances")]
+	public ObjectInstanceTrackingMode trackingMode = ObjectInstanceTrackingMode.LowLatencyCoarsePosition;
+
+
 	public ObjectManagerMenu objectManagerMenu;
 
 
@@ -188,6 +192,7 @@ public class CustomObjectSearch : MonoBehaviour
 		new ConcurrentQueue<ObjectAnchorsServiceEvent>();
 
 
+
 	/// <summary>
 	/// Returns true if diagnostics capture is enabled.
 	/// </summary>
@@ -227,6 +232,7 @@ public class CustomObjectSearch : MonoBehaviour
 			throw ex;
 		}
 
+		_objectAnchorsService.Pause();
 		Debug.Log($"Object search initialized.");
 
 		foreach (var file in FileHelper.GetFilesInDirectory(Application.persistentDataPath, "*.ou"))
@@ -289,17 +295,19 @@ public class CustomObjectSearch : MonoBehaviour
 			_objectAnchorsService.StartDiagnosticsSession();
 		}
 
-		_objectAnchorsService.Pause();
+		Debug.Log($"ObjectAnchorsService status: {_objectAnchorsService.Status}");
 	}
 
 	public void StartSearch()
 	{
 		_objectAnchorsService.Resume();
+		InGameNotification.SetNotification("Search started", 4);
 	}
 
 	public void StopSearch()
 	{
 		_objectAnchorsService.Pause();
+		InGameNotification.SetNotification("Search stopped", 4);
 	}
 
 	public void ToggleSearch()
@@ -411,6 +419,9 @@ public class CustomObjectSearch : MonoBehaviour
 					          $"coverage {_event.Args.SurfaceCoverage.ToString("0.0000")}, " +
 					          $"position {_event.Args.Location?.Position}, " +
 					          $"rotation {_event.Args.Location?.Orientation}");
+					_objectAnchorsService.SetObjectInstanceTrackingMode(_event.Args.InstanceId, trackingMode);
+					objectManagerMenu.AddObject(_event.Args.ModelId, _event.Args.InstanceId,
+						_modelIdToName[_event.Args.ModelId]);
 					DrawBoundingBox(_event.Args);
 					PlaceVisualizationMesh(_event.Args, replace: false);
 					break;
@@ -423,8 +434,6 @@ public class CustomObjectSearch : MonoBehaviour
 					          $"rotation {_event.Args.Location?.Orientation}");
 					DrawBoundingBox(_event.Args);
 					PlaceVisualizationMesh(_event.Args, replace: false);
-					objectManagerMenu.AddObject(_event.Args.ModelId, _event.Args.InstanceId,
-						_modelIdToName[_event.Args.ModelId]);
 					break;
 				}
 				case ObjectAnchorsServiceEventKind.Removed:
@@ -578,6 +587,7 @@ public class CustomObjectSearch : MonoBehaviour
 
 	private void TrySearchObject()
 	{
+		if (_objectAnchorsService.Status == ObjectAnchorsServiceStatus.Paused) return;
 		if (Interlocked.CompareExchange(ref _detectionCompleted, 0, 1) == 1)
 		{
 			if (_cachedCameraMain == null)
