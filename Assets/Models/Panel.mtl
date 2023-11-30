@@ -1,0 +1,43 @@
+# Blender 3.6.5 MTL File: 'None'
+# www.blender.org
+
+newmtl 01___Default
+Ns 25.000004
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.477000 0.477000 0.477000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl 02___Default
+Ns 68.999992
+Ka 1.000000 1.000000 1.000000
+Ks 0.549000 0.549000 0.549000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/feder/Downloads/Models/KALLAX_Block_1_Light_green_Drawer_obj/IKE170001_obj/maps/IKE170001_d.jpg
+map_Bump C:/Users/feder/Downloads/Models/KALLAX_Block_1_Light_green_Drawer_obj/IKE170001_obj/maps/IKE170001_d.jpg
+
+newmtl 03___Default
+Ns 38.000011
+Ka 1.000000 1.000000 1.000000
+Kd 0.572500 0.741200 0.058800
+Ks 0.396000 0.396000 0.396000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl 04___Default
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Kd 0.635300 0.635300 0.635300
+Ks 0.288000 0.288000 0.288000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
