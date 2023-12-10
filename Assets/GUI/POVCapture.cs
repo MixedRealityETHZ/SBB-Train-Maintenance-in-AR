@@ -9,6 +9,7 @@ using MixedReality.Toolkit.UX;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
 
 public class ScreenShot : MonoBehaviour
@@ -18,7 +19,7 @@ public class ScreenShot : MonoBehaviour
 	private string endpoint = "<azure_ocr_api_endpoint>vision/v3.2/read/analyze";
 	private string apiKey = "<azure_ocr_api_key>";
 	private string getResultUrl;
-	public UnityEngine.UI.Image screenshotDisplay;
+	public RawImage screenshotDisplay;
 	public GameObject screenshotPanel;
 
 	public GameObject labelPanel;
@@ -112,11 +113,12 @@ public class ScreenShot : MonoBehaviour
 
 	private void ShowHUD()
 	{
+		Debug.Log("Showing HUD");
 		Texture2D screenshotTexture = new Texture2D(2, 2);
 		byte[] imageData = File.ReadAllBytes(image_path);
 		screenshotTexture.LoadImage(imageData);
-		screenshotDisplay.sprite = Sprite.Create(screenshotTexture,
-			new Rect(0, 0, screenshotTexture.width, screenshotTexture.height), new Vector2(0.5f, 0.5f));
+		screenshotDisplay.texture = screenshotTexture;
+		screenshotDisplay.rectTransform.sizeDelta = new Vector2(screenshotTexture.width, screenshotTexture.height);
 		screenshotPanel.SetActive(true);
 
 		StartCoroutine(SendImageForAnalysis());
@@ -124,6 +126,7 @@ public class ScreenShot : MonoBehaviour
 
 	private IEnumerator SendImageForAnalysis()
 	{
+		Debug.Log("Sending OCR request");
 		byte[] imageData = File.ReadAllBytes(image_path);
 		UnityWebRequest request = UnityWebRequest.Put(endpoint, imageData);
 		request.method = "POST";
@@ -135,7 +138,7 @@ public class ScreenShot : MonoBehaviour
 
 		if (request.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(request.error);
+			Debug.LogError($"Error {request.responseCode}: {request.error}");
 		}
 		else
 		{
