@@ -12,7 +12,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
 
-public class ScreenShot : MonoBehaviour
+public class MRTKPOVCapture : MonoBehaviour
 {
 	string path;
 	string image_path;
@@ -32,7 +32,6 @@ public class ScreenShot : MonoBehaviour
 	private string patternID = @"^(?:SBB )?(\d{3}-\d{2}-\d{3})$";
 
 	private PhotoCapture photoCaptureObject = null;
-	private Texture image;
 
 	// Start is called before the first frame update
 	void Start()
