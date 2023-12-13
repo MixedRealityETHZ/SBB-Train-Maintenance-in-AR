@@ -137,13 +137,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualizationPrefabs:
-  - Name: Keyboard
-    VisualizationPrefab: {fileID: 569854201466143216, guid: b40211b9d231e6043817b3e70ec48b09, type: 3}
-  - Name: Birb
-    VisualizationPrefab: {fileID: 919132149155446097, guid: f131188860ab46747a65cb4f6168e6f6, type: 3}
-  - Name: Shelf
-    VisualizationPrefab: {fileID: 919132149155446097, guid: cc5967e0b7d4f5b4b907e959364c368d, type: 3}
-  - Name: Panel
-    VisualizationPrefab: {fileID: 919132149155446097, guid: fbeccf995071d914e995e41bdf437da7, type: 3}
-  - Name: Drawer
-    VisualizationPrefab: {fileID: 919132149155446097, guid: 84f1b4de9d69f2244ab5cf06e84291ac, type: 3}
+  - Name: Drawer_With_Marker_GLB_m
+    VisualizationPrefab: {fileID: 7071719784754164069, guid: b17d2abc8db5c4b4eb245dd65403d33f, type: 3}
+  - Name: Keyboard_GLB_m
+    VisualizationPrefab: {fileID: 7874154826623876802, guid: 05d4d2aeb60c26f4fa5db59842b51b9f, type: 3}
+  - Name: Panel_With_Marker_GLB_m
+    VisualizationPrefab: {fileID: 784686781344492905, guid: 00b1480199ece4e499da47c3e7c28516, type: 3}
+  - Name: Shelf_Complete_GLB_m
+    VisualizationPrefab: {fileID: 2708122394326678704, guid: 747d7b7a430fb8349966524f912a4e28, type: 3}
+  - Name: Shelf_GLB_m
+    VisualizationPrefab: {fileID: 691015030542991731, guid: 994126b315d7e6748bdbb00b75e999bb, type: 3}
+  - Name: Wichtel_GLB_m
+    VisualizationPrefab: {fileID: 5979480722262047706, guid: 6f8281472ba604a4e854e9576f90e38c, type: 3}
