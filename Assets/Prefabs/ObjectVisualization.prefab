@@ -144,8 +144,8 @@ MonoBehaviour:
   - Name: Panel_With_Marker_GLB_m
     VisualizationPrefab: {fileID: 784686781344492905, guid: 00b1480199ece4e499da47c3e7c28516, type: 3}
   - Name: Shelf_Complete_GLB_m
-    VisualizationPrefab: {fileID: 2708122394326678704, guid: 747d7b7a430fb8349966524f912a4e28, type: 3}
-  - Name: Shelf_GLB_m
     VisualizationPrefab: {fileID: 691015030542991731, guid: 994126b315d7e6748bdbb00b75e999bb, type: 3}
+  - Name: Shelf_GLB_m
+    VisualizationPrefab: {fileID: 2708122394326678704, guid: 747d7b7a430fb8349966524f912a4e28, type: 3}
   - Name: Wichtel_GLB_m
     VisualizationPrefab: {fileID: 5979480722262047706, guid: 6f8281472ba604a4e854e9576f90e38c, type: 3}
