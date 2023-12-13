@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,7 +11,18 @@ public class Checklist : MonoBehaviour
 {
     public GameObject checkListItemPrefab;
     public string currentDoor;
+    public List<Steps> checklists;
+    
     private Hashtable checkListTable;
+
+    [Serializable]
+    public struct Steps
+    {
+        public string plaqueNr;
+        public List<string> listItems;
+    }
+    
+    
 
     void Start()
     {
