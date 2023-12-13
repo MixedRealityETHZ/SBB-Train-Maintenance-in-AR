@@ -100,7 +100,7 @@ public class ScreenShot : MonoBehaviour
 	public void Capture()
 	{
 		screenshotButton.enabled = false;
-		
+
 		if (Application.isEditor)
 		{
 			screenshotPanel.SetActive(false);
@@ -141,16 +141,22 @@ public class ScreenShot : MonoBehaviour
 
 		if (request.result != UnityWebRequest.Result.Success)
 		{
-			//Debug.LogError($"Error {request.responseCode}: {request.error}");
+			Debug.LogError("SendingImageForAnalysis: " + FormatErrorResponse(request));
 			screenshotButton.enabled = true;
 			screenshotPanel.SetActive(false);
 		}
 		else
 		{
 			getResultUrl = request.GetResponseHeaders()["Operation-Location"];
-			yield return new WaitForSeconds(0.1f);
 			StartCoroutine(GetAnalysisResults(getResultUrl));
 		}
+	}
+
+	private string FormatErrorResponse(UnityWebRequest request)
+	{
+		string formattedHeaders = string.Join("\n", request.GetResponseHeaders().Select(kv => $"{kv.Key}: {kv.Value}"));
+		return
+			$"ERROR {request.responseCode}: {request.error}.\nResponse body:\n{request.result}\nHeaders:\n{formattedHeaders}";
 	}
 
 	private IEnumerator GetAnalysisResults(string getResultUrl)
@@ -164,7 +170,9 @@ public class ScreenShot : MonoBehaviour
 
 			if (request.result != UnityWebRequest.Result.Success)
 			{
-				Debug.Log(request.error);
+				Debug.LogError("GetAnalysisResults: " + FormatErrorResponse(request));
+				screenshotButton.enabled = true;
+				screenshotPanel.SetActive(false);
 			}
 			else
 			{
@@ -212,11 +220,11 @@ public class ScreenShot : MonoBehaviour
 				else if (status == "running")
 				{
 					Debug.Log("Analysis still running... retrying in 0.5 seconds.");
-					yield return new WaitForSeconds(0.5f);
+					yield return new WaitForSeconds(1.0f);
 				}
 				else
 				{
-					Debug.LogError("Analysis failed or other status received.");
+					Debug.LogError("ERROR: Analysis failed or other status received.");
 					screenshotButton.enabled = true;
 					screenshotPanel.SetActive(false);
 					yield break;
