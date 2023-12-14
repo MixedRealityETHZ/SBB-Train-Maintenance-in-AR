@@ -1,42 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Checklist : MonoBehaviour
+public class ChecklistGenerator : MonoBehaviour
 {
     public GameObject checkListItemPrefab;
     public string currentDoor;
-    public List<Steps> checklists;
-    
-    private Hashtable checkListTable;
+    public List<Checklist> checklists;
 
     [Serializable]
-    public struct Steps
+    public struct Checklist
     {
         public string plaqueNr;
         public List<string> listItems;
     }
-    
-    
-
-    void Start()
-    {
-        checkListTable = new Hashtable
-       {
-           { "MT22", new List<string> { "MT22" } },
-           { "MT23", new List<string> { "MT23" } }
-       };
-    }
 
     public void SetDoor(string doorName)
     {
-        if (checkListTable.ContainsKey(doorName))
+        if (checklists.Exists(c => c.plaqueNr == doorName))
         {
+            var checklist = checklists.Find(c => c.plaqueNr == doorName);
+
             currentDoor = doorName;
 
             var verticalLayout = transform.Find("HorizontalLayout/ListVerticalLayout");
@@ -49,7 +35,7 @@ public class Checklist : MonoBehaviour
                 }
 
             // Add new items
-            foreach (string item in checkListTable[currentDoor] as List<string>)
+            foreach (string item in checklist.listItems)
             {
                 var newEntry = Instantiate(checkListItemPrefab, verticalLayout);
                 var textObject = newEntry.transform.Find("CheckListText").gameObject;
