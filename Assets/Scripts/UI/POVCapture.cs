@@ -21,6 +21,7 @@ public class ScreenShot : MonoBehaviour
 	private string getResultUrl;
 	public RawImage screenshotDisplay;
 	public GameObject screenshotPanel;
+	public ChecklistGenerator checklistGenerator;
 
 	public GameObject labelPanel;
 
@@ -216,6 +217,7 @@ public class ScreenShot : MonoBehaviour
 
 					labelPanel.SetActive(true);
 					labelText.text = $"{plaqueLabel} - SBB {SBBID}";
+					checklistGenerator.SetDoor(plaqueLabel);
 				}
 				else if (status == "running")
 				{
