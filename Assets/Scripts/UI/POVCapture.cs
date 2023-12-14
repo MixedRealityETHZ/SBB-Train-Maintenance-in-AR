@@ -11,7 +11,6 @@ using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
-using System.Security.Cryptography.X509Certificates;
 
 public class ScreenShot : MonoBehaviour
 {
