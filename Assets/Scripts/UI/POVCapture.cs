@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
 using System.Linq;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using MixedReality.Toolkit.UX;
 using Newtonsoft.Json.Linq;
 using TMPro;
@@ -24,6 +26,8 @@ public class ScreenShot : MonoBehaviour
 
 	//public UnityEngine.UI.Text labelText; create label
 	public TMP_Text labelText;
+	public GameObject labelPanel;
+	public HandConstraintPalmUp handMenu;
 	public PressableButton screenshotButton;
 
 	private string patternLLNN = @"^[A-Za-z]{2}\d{2}$";
@@ -32,7 +36,7 @@ public class ScreenShot : MonoBehaviour
 	private PhotoCapture photoCaptureObject = null;
 	private Texture image;
 
-	private Coroutine _statusTimer = null;
+	private Coroutine _statusTimer;
 
 	// Start is called before the first frame update
 	void Start()
@@ -245,9 +249,16 @@ public class ScreenShot : MonoBehaviour
 					}
 					else
 					{
+						// Label found
 						labelText.text = $"{plaqueLabel} - SBB {SBBID}";
 						checklistGenerator.SetDoor(plaqueLabel);
 						SetTimedStatusText($"Found label: {plaqueLabel}", 4.0f);
+						
+						// Only enable label panel if hand menu is open
+						if (handMenu.Handedness != Handedness.None)
+						{
+							labelPanel.SetActive(true);
+						}
 					}
 				}
 				else if (status == "running")
