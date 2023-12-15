@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
 using System.Linq;
 using MixedReality.Toolkit.UX;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine.UI;
@@ -22,8 +20,7 @@ public class ScreenShot : MonoBehaviour
 	public RawImage screenshotDisplay;
 	public GameObject screenshotPanel;
 	public ChecklistGenerator checklistGenerator;
-
-	public GameObject labelPanel;
+	public GameObject statusTextPlate;
 
 	//public UnityEngine.UI.Text labelText; create label
 	public TMP_Text labelText;
@@ -35,6 +32,8 @@ public class ScreenShot : MonoBehaviour
 	private PhotoCapture photoCaptureObject = null;
 	private Texture image;
 
+	private Coroutine _statusTimer = null;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -44,9 +43,33 @@ public class ScreenShot : MonoBehaviour
 		screenshotPanel.SetActive(false);
 	}
 
-	// Update is called once per frame
-	void Update()
+	private void SetStatusText(string text)
 	{
+		statusTextPlate.SetActive(true);
+		statusTextPlate.GetComponentInChildren<TMP_Text>().text = text;
+	}
+
+	private void HideStatusText()
+	{
+		statusTextPlate.SetActive(false);
+	}
+
+	private IEnumerator SetTimedStatusTextCoroutine(string text, float duration)
+	{
+		SetStatusText(text);
+		yield return new WaitForSeconds(duration);
+		HideStatusText();
+		_statusTimer = null;
+	}
+
+	private void SetTimedStatusText(string text, float duration)
+	{
+		if (_statusTimer != null)
+		{
+			StopCoroutine(_statusTimer);
+		}
+
+		StartCoroutine(SetTimedStatusTextCoroutine(text, duration));
 	}
 
 	void OnPhotoCaptureCreated(PhotoCapture captureObject)
@@ -81,6 +104,7 @@ public class ScreenShot : MonoBehaviour
 		else
 		{
 			Debug.LogError("Unable to start photo mode!");
+			SetTimedStatusText("Error starting photo mode :(", 4.0f);
 		}
 	}
 
@@ -89,12 +113,14 @@ public class ScreenShot : MonoBehaviour
 		if (result.success)
 		{
 			Debug.Log("Saved Photo to disk!");
+			HideStatusText();
 			ShowHUD();
 			photoCaptureObject.StopPhotoModeAsync(OnStoppedPhotoMode);
 		}
 		else
 		{
 			Debug.Log("Failed to save Photo to disk");
+			SetTimedStatusText("Error saving photo capture :(", 4.0f);
 		}
 	}
 
@@ -104,14 +130,12 @@ public class ScreenShot : MonoBehaviour
 
 		if (Application.isEditor)
 		{
-			screenshotPanel.SetActive(false);
-			labelPanel.SetActive(false);
 			ScreenCapture.CaptureScreenshot(image_path);
-
 			ShowHUD();
 		}
 		else
 		{
+			SetStatusText("Hold still...");
 			PhotoCapture.CreateAsync(false, OnPhotoCaptureCreated);
 		}
 	}
@@ -119,11 +143,11 @@ public class ScreenShot : MonoBehaviour
 	private void ShowHUD()
 	{
 		Debug.Log("Showing HUD");
+		screenshotPanel.SetActive(true);
 		Texture2D screenshotTexture = new Texture2D(2, 2);
 		byte[] imageData = File.ReadAllBytes(image_path);
 		screenshotTexture.LoadImage(imageData);
 		screenshotDisplay.texture = screenshotTexture;
-		screenshotPanel.SetActive(true);
 
 		StartCoroutine(SendImageForAnalysis());
 	}
@@ -215,14 +239,22 @@ public class ScreenShot : MonoBehaviour
 					}
 
 
-					labelPanel.SetActive(true);
-					labelText.text = $"{plaqueLabel} - SBB {SBBID}";
-					checklistGenerator.SetDoor(plaqueLabel);
+					if (plaqueLabel == "n/a" || SBBID == "n/a")
+					{
+						SetTimedStatusText($"Failed to detect label", 4.0f);
+					}
+					else
+					{
+						labelText.text = $"{plaqueLabel} - SBB {SBBID}";
+						checklistGenerator.SetDoor(plaqueLabel);
+						SetTimedStatusText($"Found label: {plaqueLabel}", 4.0f);
+					}
 				}
 				else if (status == "running")
 				{
-					Debug.Log("Analysis still running... retrying in 0.5 seconds.");
+					Debug.Log("Analysis still running... retrying in 1 second.");
 					yield return new WaitForSeconds(1.0f);
+					SetStatusText("Still analyzing... Hold tight");
 				}
 				else
 				{

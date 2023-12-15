@@ -1,21 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.MixedReality.GraphicsTools;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem.OSX;
 using UnityEngine.UI;
 using System.IO;
-using UnityEditor;
+
+#if WINDOWS_UWP
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.Storage.Search;
+#endif
 
 public class PDFPagesGenerator : MonoBehaviour
 {
     public string PDFImageFolder;
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
-        string folderPath = PDFImageFolder;
+#if WINDOWS_UWP
+        string commonPath = KnownFolders.Objects3D.Path;
+#else
+        string commonPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+#endif
+        string folderPath = commonPath + "\\" + PDFImageFolder;
         string[] imagePaths = Directory.GetFiles(folderPath);
 
         foreach (var imagePath in imagePaths)
