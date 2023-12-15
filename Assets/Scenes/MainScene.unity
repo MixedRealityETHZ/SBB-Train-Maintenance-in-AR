@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3002,7 +3002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ccbfa9e77ec77b48b0d44eac5fca1b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PDFImageFolder: C:\Users\feder\Pictures
+  PDFImageFolder: C:\Users\feder\Documents\ETHZ\MR_Example_PDF
 --- !u!1 &526665038
 GameObject:
   m_ObjectHideFlags: 0
@@ -14166,11 +14166,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 791738713544441761}
+  - component: {fileID: 7057686688428771840}
   - component: {fileID: 576144248097763227}
   - component: {fileID: 7057686688428771839}
   - component: {fileID: 1765622893859316271}
   - component: {fileID: 877893815}
-  - component: {fileID: 7057686688428771840}
   m_Layer: 0
   m_Name: CheckListMenu
   m_TagString: Untagged

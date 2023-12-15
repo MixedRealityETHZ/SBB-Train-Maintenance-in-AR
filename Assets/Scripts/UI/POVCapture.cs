@@ -132,9 +132,9 @@ public class ScreenShot : MonoBehaviour
 	{
 		Debug.Log("Sending OCR request");
 		byte[] imageData = File.ReadAllBytes(image_path);
-		UnityWebRequest request = UnityWebRequest.Put(endpoint, imageData);
-		request.method = "POST";
-		request.downloadHandler = new DownloadHandlerBuffer();
+		var uploadHandler = new UploadHandlerRaw(imageData);
+		var downloadHandler = new DownloadHandlerBuffer();
+		UnityWebRequest request = new UnityWebRequest(endpoint, "POST", downloadHandler, uploadHandler);
 		request.SetRequestHeader("Content-Type", "application/octet-stream");
 		request.SetRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
 
