@@ -1,4 +1,4 @@
-﻿# SBB Mixed Reality
+# SBB Mixed Reality
 
 ## About
 
@@ -41,7 +41,7 @@ Optionally, you can also install support for Holographic Remoting:
 
 - [HoloLens 2 Holographic Remoting Unity package](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/native/holographic-remoting-overview)
 
-#### :man_technologist: Visual Studio
+#### :wrench: Visual Studio
 
 A recent version of Visual Studio is required. The following additional
 components need to be installed:
