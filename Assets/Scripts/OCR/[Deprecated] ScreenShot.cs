@@ -16,9 +16,9 @@ namespace OCR
 	[Obsolete("Class is deprecated in favor of OCRManager. Please use that instead.")]
 	public class ScreenShot : MonoBehaviour
 	{
-		private const string APIKey = "<azure_ocr_api_key>";
+		private const string APIKey = "<redacted>";
 		private const string Endpoint =
-			"<azure_ocr_api_endpoint>vision/v3.2/read/analyze";
+			"<redacted>";
 
 		public Image screenshotDisplay;
 		public GameObject screenshotPanel;

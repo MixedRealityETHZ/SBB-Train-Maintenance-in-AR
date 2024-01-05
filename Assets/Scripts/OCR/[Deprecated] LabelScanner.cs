@@ -22,8 +22,8 @@ namespace OCR
 		public GameObject screenshotPanel;
 
 		public PressableButton screenshotButton;
-		private readonly string apiKey = "<azure_ocr_api_key>";
-		private readonly string endpoint = "<azure_ocr_api_endpoint>vision/v3.2/read/analyze";
+		private readonly string apiKey = "<redacted>";
+		private readonly string endpoint = "<redacted>";
 		private string getResultUrl;
 		private string image_path;
 		private string path;

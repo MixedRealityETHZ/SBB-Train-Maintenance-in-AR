@@ -26,8 +26,8 @@ namespace OCR
 	/// </summary>
 	public class OCRManager : MonoBehaviour
 	{
-		private const string Endpoint = "<azure_ocr_api_endpoint>vision/v3.2/read/analyze";
-		private const string APIKey = "<azure_ocr_api_key>";
+		private const string Endpoint = "<Enter your endpoint here>";
+		private const string APIKey = "<Enter your API key here>";
 		private const string PatternID = @"^(?:SBB )?(\d{3}-\d{2}-\d{3})$";
 		private const string PatternLN = @"^[A-Za-z]{2}\d{2}$";
 
