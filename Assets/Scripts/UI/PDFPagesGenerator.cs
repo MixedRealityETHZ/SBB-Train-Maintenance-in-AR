@@ -16,8 +16,13 @@ using Windows.Storage.Search;
 
 namespace UI
 {
+	/// <summary>
+	/// Loads all images in a folder and adds them as children to the attached GameObject (in alphabetical order). To
+	/// be used together with UI layout groups for pagination.
+	/// </summary>
 	public class PDFPagesGenerator : MonoBehaviour
 	{
+		[Tooltip("Root folder that contains all page images. Supported formats are PNG and JPG")]
 		public string pdfImageFolder;
 
 		// Start is called before the first frame update

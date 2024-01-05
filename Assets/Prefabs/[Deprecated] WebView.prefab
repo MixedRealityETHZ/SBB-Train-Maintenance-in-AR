@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7218707825154731672}
   - component: {fileID: 6366600377974936406}
   m_Layer: 0
-  m_Name: WebView
+  m_Name: '[Deprecated] WebView'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

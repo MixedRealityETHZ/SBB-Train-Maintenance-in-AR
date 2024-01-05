@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 8354829745721372657}
   - component: {fileID: 2430421054551534684}
   m_Layer: 5
-  m_Name: HUD
+  m_Name: '[Deprecated] HUD'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

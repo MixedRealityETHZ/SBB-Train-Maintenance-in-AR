@@ -21,6 +21,9 @@ using UnityEngine.Windows.WebCam;
 
 namespace OCR
 {
+	/// <summary>
+	///     Manages label scanning, screenshot display and other related tasks.
+	/// </summary>
 	public class OCRManager : MonoBehaviour
 	{
 		private const string Endpoint = "<azure_ocr_api_endpoint>vision/v3.2/read/analyze";
@@ -155,6 +158,18 @@ namespace OCR
 			}
 		}
 
+		/// <summary>
+		///     Starts the appropriate screenshot capture procedure. This performs different actions depending on the
+		///     context:
+		/// 
+		///     - In the Unity editor, it uses the Unity API for capturing a screenshot and saves it to a file
+		///     - In UWP build, uses the HL's webcam capabilities to take a screenshot and save it to a file
+		///     - If `enableRecordingMode` is enabled, no screenshot is taken and instead the textures saved in
+		///		  `mockImages` are used
+		/// 
+		///     In any case, a photo is sent to an Azure AI Vision endpoint which analyzes the image and returns all the
+		///     recognized text. All information is shown as UI elements to the user.
+		/// </summary>
 		public void Capture()
 		{
 			screenshotButton.enabled = false;

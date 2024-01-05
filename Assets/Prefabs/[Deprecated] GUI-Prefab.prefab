@@ -1675,7 +1675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3804565131720916971}
   m_Layer: 0
-  m_Name: GUI-Prefab
+  m_Name: '[Deprecated] GUI-Prefab'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

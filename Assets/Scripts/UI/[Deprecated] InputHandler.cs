@@ -1,5 +1,6 @@
 #region
 
+using System;
 using Microsoft.MixedReality.WebView;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -8,6 +9,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace UI
 {
+	[Obsolete("Script has been deprecated, as WebViews are no longer in use.")]
 	public class InputHandler : MonoBehaviour
 	{
 		private IWebView _webView;

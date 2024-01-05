@@ -3111,7 +3111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ccbfa9e77ec77b48b0d44eac5fca1b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PDFImageFolder: ETHZ\MR_Example_PDF
+  pdfImageFolder: ETHZ\MR_Example_PDF
 --- !u!1 &526665038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3361,7 +3361,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 68.795, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &560356542
@@ -10771,19 +10771,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662674e17a481ae43959e2fdef0e032e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SearchFrustumFarDistance: 4
-  SearchFrustumHorizontalFovInDegrees: 60
-  SearchFrustumAspectRatio: 1
-  SearchAreaScaleFactor: 2
-  SearchAreaShape: 0
-  ObservationMode: 0
-  ShowEnvironmentObservations: 1
-  SearchSingleInstance: 1
-  DiagnosticsSentinelFilename: debug
-  WireframeMaterial: {fileID: 2100000, guid: 7f82994d006a3ca479d97a7e3e2a91d3, type: 2}
-  EnvironmentMaterial: {fileID: 2100000, guid: 726645fb27248a14ca4c12f7c2a86e22, type: 2}
-  MultiAnchorPlacementPrefab: {fileID: 4934647782743381813, guid: c1a89e6b90a36a44b970ff739c7f8c73, type: 3}
-  VisualizationPrefab: {fileID: 4460435621705567174, guid: 652fd378e473dc441b398f36d67dc67f, type: 3}
+  searchFrustumFarDistance: 4
+  searchFrustumHorizontalFovInDegrees: 60
+  searchFrustumAspectRatio: 1
+  searchAreaScaleFactor: 2
+  searchAreaShape: 0
+  observationMode: 0
+  showEnvironmentObservations: 1
+  searchSingleInstance: 1
+  diagnosticsSentinelFilename: debug
+  wireframeMaterial: {fileID: 2100000, guid: 7f82994d006a3ca479d97a7e3e2a91d3, type: 2}
+  environmentMaterial: {fileID: 2100000, guid: 726645fb27248a14ca4c12f7c2a86e22, type: 2}
+  multiAnchorPlacementPrefab: {fileID: 4934647782743381813, guid: c1a89e6b90a36a44b970ff739c7f8c73, type: 3}
+  visualizationPrefab: {fileID: 4460435621705567174, guid: 652fd378e473dc441b398f36d67dc67f, type: 3}
   minSurfaceCoverage: 0.53
   expectedMaxVerticalOrientationInDegrees: 0
   positionChangeThreshold: 0.1
@@ -24009,7 +24009,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 251.18, y: 0}
   m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &8110664055597373738
@@ -24054,7 +24054,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 46.5, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8110664057621551451

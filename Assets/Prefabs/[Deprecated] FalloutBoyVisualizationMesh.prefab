@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1427473809493553904}
   m_Layer: 0
-  m_Name: FalloutBoyVisualizationMesh
+  m_Name: '[Deprecated] FalloutBoyVisualizationMesh'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

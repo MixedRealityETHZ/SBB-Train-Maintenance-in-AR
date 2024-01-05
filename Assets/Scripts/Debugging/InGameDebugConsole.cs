@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace Debugging
 {
+	/// <summary>
+	/// MonoBehavior script for displaying console messages in-game for easier run-time debugging
+	/// </summary>
 	public class InGameDebugConsole : MonoBehaviour
 	{
 		public TMP_Text header;
@@ -74,6 +77,10 @@ namespace Debugging
 			body.text = GetBodyText();
 		}
 
+		/// <summary>
+		/// Filters messages below the given log level
+		/// </summary>
+		/// <param name="level">Lowest level of message that is displayed.</param>
 		public void SetLogLevel(int level)
 		{
 			var logType = _levelsOrder[level];

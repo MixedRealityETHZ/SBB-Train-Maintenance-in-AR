@@ -6,16 +6,11 @@ using UnityEngine;
 
 namespace ObjectTracking
 {
+	/// <summary>
+	///     Marker object used in `ObjectTrackingManager` to find all the objects that represent AOA object model origins.
+	///     This transform is also used for the `SmoothTransform` script.
+	/// </summary>
 	public class ObjectOriginTransform : MonoBehaviour
 	{
-		// Start is called before the first frame update
-		private void Start()
-		{
-		}
-
-		// Update is called once per frame
-		private void Update()
-		{
-		}
 	}
 }

@@ -32,6 +32,9 @@ using Windows.Storage.Search;
 
 namespace ObjectTracking
 {
+	/// <summary>
+	///     Manages AOA object tracking. This is an adapted version of the default AOA example (non-MRTK)
+	/// </summary>
 	public class ObjectTrackingManager : MonoBehaviour
 	{
 		private struct InstanceState
@@ -41,6 +44,9 @@ namespace ObjectTracking
 			public float SurfaceCoverage;
 		}
 
+		/// <summary>
+		///     Type of initial search area. Only `Box` is tested and verified to work.
+		/// </summary>
 		public enum SearchAreaKind
 		{
 			Box,
@@ -293,18 +299,27 @@ namespace ObjectTracking
 			Debug.Log($"ObjectAnchorsService status: {_objectAnchorsService.Status}");
 		}
 
+		/// <summary>
+		///     Enables AOA object search
+		/// </summary>
 		public void StartSearch()
 		{
 			_objectAnchorsService.Resume();
 			InGameNotification.SetNotification("Search started", 4);
 		}
 
+		/// <summary>
+		///     Disables AOA object search
+		/// </summary>
 		public void StopSearch()
 		{
 			_objectAnchorsService.Pause();
 			InGameNotification.SetNotification("Search stopped", 4);
 		}
 
+		/// <summary>
+		///     Toggles AOA object search
+		/// </summary>
 		public void ToggleSearch()
 		{
 			if (_objectAnchorsService.Status == ObjectAnchorsServiceStatus.Paused) StartSearch();
@@ -442,6 +457,12 @@ namespace ObjectTracking
 				}
 		}
 
+		/// <summary>
+		///     Resets an object in AOA. This removes it from the set of currently tracked objects and starts searching for
+		///     it again.
+		/// </summary>
+		/// <param name="modelId">AOA model ID</param>
+		/// <param name="instanceId">AOA instance ID</param>
 		public void ResetObject(Guid modelId, Guid instanceId)
 		{
 			_objectAnchorsService.RemoveObjectInstance(instanceId);

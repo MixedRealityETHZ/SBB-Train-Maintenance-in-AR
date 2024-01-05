@@ -10,12 +10,19 @@ using UnityEngine.UI;
 
 namespace UI
 {
+	/// <summary>
+	/// Populates a checklist GameObject with the appropriate list items based on the scanned door label
+	/// </summary>
 	public class ChecklistGenerator : MonoBehaviour
 	{
 		public GameObject checkListItemPrefab;
 		public string currentDoor;
 		public List<Checklist> checklists;
 
+		/// <summary>
+		/// Set the door number we're currently working on. This should come from OCR recognition of the door label.
+		/// </summary>
+		/// <param name="doorName"></param>
 		public void SetDoor(string doorName)
 		{
 			// Nothing to do if no such checklist

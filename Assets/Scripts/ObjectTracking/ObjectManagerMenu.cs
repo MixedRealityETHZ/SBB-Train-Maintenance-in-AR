@@ -13,6 +13,9 @@ using UnityEngine.Events;
 
 namespace ObjectTracking
 {
+	/// <summary>
+	///     MonoBehavior script managing the "Manage Tracked Objects" menu.
+	/// </summary>
 	public class ObjectManagerMenu : MonoBehaviour
 	{
 		public GameObject noObjectText;
@@ -27,12 +30,21 @@ namespace ObjectTracking
 			noObjectText.SetActive(true);
 		}
 
+		/// <summary>
+		///     Enables or disables the menu being shown.
+		/// </summary>
 		public void ToggleActive()
 		{
 			gameObject.SetActive(!gameObject.activeSelf);
 			if (gameObject.activeSelf) InGameNotification.ClearNotification();
 		}
 
+		/// <summary>
+		///     Add an object to the list of actively tracked objects.
+		/// </summary>
+		/// <param name="modelId">AOA model ID</param>
+		/// <param name="instanceId">AOA instance ID</param>
+		/// <param name="objectName">Display name of the object</param>
 		public void AddObject(Guid modelId, Guid instanceId, string objectName)
 		{
 			Debug.Log($"Adding object to manage objects menu: {modelId}/{instanceId}/{objectName}");
@@ -45,6 +57,10 @@ namespace ObjectTracking
 			noObjectText.SetActive(false);
 		}
 
+		/// <summary>
+		///     Removes an object from the list of tracked objects.
+		/// </summary>
+		/// <param name="modelId">AOA model ID</param>
 		public void RemoveObject(Guid modelId)
 		{
 			_buttons.Remove(modelId, out var button);
