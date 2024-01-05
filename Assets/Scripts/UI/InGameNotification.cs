@@ -1,42 +1,49 @@
+#region
+
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class InGameNotification : MonoBehaviour
+#endregion
+
+namespace UI
 {
-	private static InGameNotification _instance;
-	private static Coroutine _timeout;
-
-	public GameObject notification;
-	public TMP_Text text;
-
-	// Start is called before the first frame update
-	private void Start()
+	public class InGameNotification : MonoBehaviour
 	{
-		notification.SetActive(false);
-		_instance = this;
-	}
+		private static InGameNotification _instance;
+		private static Coroutine _timeout;
 
-	public static void SetNotification(string message, float? timeout = null)
-	{
-		Debug.Log($"Showing notification: {message}");
-		if (_timeout != null) _instance.StopCoroutine(_timeout);
-		_instance.notification.SetActive(true);
-		_instance.text.text = message;
+		public GameObject notification;
+		public TMP_Text text;
 
-		if (timeout != null) _timeout = _instance.StartCoroutine(ClearAfterTimeout(timeout.Value));
-	}
+		// Start is called before the first frame update
+		private void Start()
+		{
+			notification.SetActive(false);
+			_instance = this;
+		}
 
-	public static void ClearNotification()
-	{
-		Debug.Log("Clearing current notification");
-		_instance.notification.SetActive(false);
-	}
+		public static void SetNotification(string message, float? timeout = null)
+		{
+			Debug.Log($"Showing notification: {message}");
+			if (_timeout != null) _instance.StopCoroutine(_timeout);
+			_instance.notification.SetActive(true);
+			_instance.text.text = message;
 
-	private static IEnumerator ClearAfterTimeout(float timeout)
-	{
-		yield return new WaitForSeconds(timeout);
-		Debug.Log("Clearing notification after timeout");
-		ClearNotification();
+			if (timeout != null) _timeout = _instance.StartCoroutine(ClearAfterTimeout(timeout.Value));
+		}
+
+		public static void ClearNotification()
+		{
+			Debug.Log("Clearing current notification");
+			_instance.notification.SetActive(false);
+		}
+
+		private static IEnumerator ClearAfterTimeout(float timeout)
+		{
+			yield return new WaitForSeconds(timeout);
+			Debug.Log("Clearing notification after timeout");
+			ClearNotification();
+		}
 	}
 }

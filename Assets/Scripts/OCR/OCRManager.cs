@@ -10,6 +10,7 @@ using MixedReality.Toolkit.SpatialManipulation;
 using MixedReality.Toolkit.UX;
 using Newtonsoft.Json.Linq;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Serialization;
@@ -55,16 +56,17 @@ namespace OCR
 			"Toggle recording mode. If on, a mock screenshot will be used instead of taking an actual screenshot.")]
 		public bool enableRecordingMode;
 
-		[FormerlySerializedAs("mockImage")] [Tooltip("Mock screenshots to use when recording mode is enabled. They are cycled in order.")]
+		[FormerlySerializedAs("mockImage")]
+		[Tooltip("Mock screenshots to use when recording mode is enabled. They are cycled in order.")]
 		public Texture2D[] mockImages;
 
 		private string _getResultUrl;
 		private Texture _image;
 		private string _imagePath;
+		private int _mockImageIndex = -1; // Start at -1 so that incrementing the first time returns 0
 		private string _path;
 		private PhotoCapture _photoCaptureObject;
 		private Coroutine _statusTimer;
-		private int _mockImageIndex = 0;
 
 		// Start is called before the first frame update
 		private void Start()
@@ -143,7 +145,7 @@ namespace OCR
 			{
 				Debug.Log("Saved Photo to disk!");
 				HideStatusText();
-				ShowHUD(ImageSource.Path);
+				ShowHUD();
 				_photoCaptureObject.StopPhotoModeAsync(OnStoppedPhotoMode);
 			}
 			else
@@ -160,6 +162,8 @@ namespace OCR
 			// Recording mode takes preference over everything
 			if (enableRecordingMode)
 			{
+				// "Advance" image index by one and wrap around (starts at -1, so first time will be 0)
+				_mockImageIndex = (_mockImageIndex + 1) % mockImages.Length;
 				ShowHUD(ImageSource.MockImage);
 			}
 			else if (Application.isEditor)
@@ -188,7 +192,6 @@ namespace OCR
 					break;
 				case ImageSource.MockImage:
 					screenshotTexture = mockImages[_mockImageIndex];
-					_mockImageIndex = (_mockImageIndex + 1) % mockImages.Length;
 					break;
 				default:
 					throw new ArgumentException("Please provide an image source");

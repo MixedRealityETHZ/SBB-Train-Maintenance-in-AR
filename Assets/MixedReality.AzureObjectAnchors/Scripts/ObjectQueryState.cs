@@ -2,12 +2,16 @@
 #define SPATIALCOORDINATESYSTEM_API_PRESENT
 #endif
 
+#region
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.ObjectAnchors;
 using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
+
+#endregion
 
 public class ObjectQueryState : MonoBehaviour
 {

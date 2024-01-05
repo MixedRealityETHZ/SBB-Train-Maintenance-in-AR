@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+#region
+
 using UnityEngine;
+
+#endregion
 
 public class ToggleButton : MonoBehaviour
 {

@@ -5,6 +5,8 @@
 #define SPATIALCOORDINATESYSTEM_API_PRESENT
 #endif
 
+#region
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,6 +19,9 @@ using Microsoft.Azure.ObjectAnchors.SpatialGraph;
 using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEditor;
 using UnityEngine;
+
+#endregion
+
 #if WINDOWS_UWP
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -66,30 +71,30 @@ public class ObjectSearch : MonoBehaviour
 	[Tooltip("Prefab used to determine placement of detected objects.")]
 	public GameObject MultiAnchorPlacementPrefab;
 
-    /// <summary>
-    ///     Flag to indicate the detection operation, 0 - in detection, 1 - detection completed.
-    /// </summary>
-    private int _detectionCompleted = 1;
+	/// <summary>
+	///     Flag to indicate the detection operation, 0 - in detection, 1 - detection completed.
+	/// </summary>
+	private int _detectionCompleted = 1;
 
-    /// <summary>
-    ///     Cached camera instance.
-    /// </summary>
-    private Camera _cachedCameraMain;
+	/// <summary>
+	///     Cached camera instance.
+	/// </summary>
+	private Camera _cachedCameraMain;
 
-    /// <summary>
-    ///     Object Anchors service object.
-    /// </summary>
-    private IObjectAnchorsService _objectAnchorsService;
+	/// <summary>
+	///     Object Anchors service object.
+	/// </summary>
+	private IObjectAnchorsService _objectAnchorsService;
 
-    /// <summary>
-    ///     Placement of each object instance with guid as instance id.
-    /// </summary>
-    private readonly Dictionary<Guid, MultiAnchorObjectPlacement> _objectPlacements = new();
+	/// <summary>
+	///     Placement of each object instance with guid as instance id.
+	/// </summary>
+	private readonly Dictionary<Guid, MultiAnchorObjectPlacement> _objectPlacements = new();
 
-    /// <summary>
-    ///     Query associated with each model with guid as model id.
-    /// </summary>
-    private Dictionary<Guid, ObjectQueryState> _objectQueries = new();
+	/// <summary>
+	///     Query associated with each model with guid as model id.
+	/// </summary>
+	private Dictionary<Guid, ObjectQueryState> _objectQueries = new();
 
 	private Dictionary<Guid, ObjectQueryState> InitializeObjectQueries()
 	{
@@ -113,25 +118,25 @@ public class ObjectSearch : MonoBehaviour
 
 	private enum ObjectAnchorsServiceEventKind
 	{
-        /// <summary>
-        ///     Attempted to detect objects.
-        /// </summary>
-        DetectionAttempted,
+		/// <summary>
+		///     Attempted to detect objects.
+		/// </summary>
+		DetectionAttempted,
 
-        /// <summary>
-        ///     An new object is found for the first time.
-        /// </summary>
-        Added,
+		/// <summary>
+		///     An new object is found for the first time.
+		/// </summary>
+		Added,
 
-        /// <summary>
-        ///     State of a tracked object changed.
-        /// </summary>
-        Updated,
+		/// <summary>
+		///     State of a tracked object changed.
+		/// </summary>
+		Updated,
 
-        /// <summary>
-        ///     An object lost tracking.
-        /// </summary>
-        Removed
+		/// <summary>
+		///     An object lost tracking.
+		/// </summary>
+		Removed
 	}
 
 	private class ObjectAnchorsServiceEvent
@@ -140,16 +145,16 @@ public class ObjectSearch : MonoBehaviour
 		public ObjectAnchorsServiceEventKind Kind;
 	}
 
-    /// <summary>
-    ///     A queue to cache the Object Anchors events.
-    ///     Events are added in the callbacks from Object Anchors service, then consumed in the Update method.
-    /// </summary>
-    private readonly ConcurrentQueue<ObjectAnchorsServiceEvent> _objectAnchorsEventQueue = new();
+	/// <summary>
+	///     A queue to cache the Object Anchors events.
+	///     Events are added in the callbacks from Object Anchors service, then consumed in the Update method.
+	/// </summary>
+	private readonly ConcurrentQueue<ObjectAnchorsServiceEvent> _objectAnchorsEventQueue = new();
 
-    /// <summary>
-    ///     Returns true if diagnostics capture is enabled.
-    /// </summary>
-    public bool IsDiagnosticsCaptureEnabled =>
+	/// <summary>
+	///     Returns true if diagnostics capture is enabled.
+	/// </summary>
+	public bool IsDiagnosticsCaptureEnabled =>
 		File.Exists(Path.Combine(Application.persistentDataPath.Replace('/', '\\'), DiagnosticsSentinelFilename));
 
 	private void Awake()
@@ -168,11 +173,10 @@ public class ObjectSearch : MonoBehaviour
 		catch (ArgumentException ex)
 		{
 #if WINDOWS_UWP
-            string message = ex.Message;
-            Windows.Foundation.IAsyncOperation<Windows.UI.Popups.IUICommand> dialog = null;
-            UnityEngine.WSA.Application.InvokeOnUIThread(() => dialog =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               new Windows.UI.Popups.MessageDialog(message, "Invalid account information").ShowAsync(), true);
-            await dialog;
+			string message = ex.Message;
+			Windows.Foundation.IAsyncOperation<Windows.UI.Popups.IUICommand> dialog = null;
+			UnityEngine.WSA.Application.InvokeOnUIThread(() => dialog = new Windows.UI.Popups.MessageDialog(message, "Invalid account information").ShowAsync(), true);
+			await dialog;
 #elif UNITY_EDITOR
 			EditorUtility.DisplayDialog("Invaild account information", ex.Message, "OK");
 #endif // WINDOWS_UWP
@@ -190,42 +194,42 @@ public class ObjectSearch : MonoBehaviour
 
 
 #if WINDOWS_UWP
-        // Accessing a known but protected folder only works when using the StorageFolder/StorageFile apis
-        // and not the System.IO apis. On some devices, the static StorageFolder for well known folders
-        // like the 3d objects folder returns access denied when queried, but behaves as expected when
-        // accessed by path. Frustratingly, on some devices the opposite is true, and the static StorageFolder 
-        // works and the workaround finds no files.
-        StorageFolder objects3d = KnownFolders.Objects3D;
+		// Accessing a known but protected folder only works when using the StorageFolder/StorageFile apis
+		// and not the System.IO apis. On some devices, the static StorageFolder for well known folders
+		// like the 3d objects folder returns access denied when queried, but behaves as expected when
+		// accessed by path. Frustratingly, on some devices the opposite is true, and the static StorageFolder 
+		// works and the workaround finds no files.
+		StorageFolder objects3d = KnownFolders.Objects3D;
 
-        // First try using the static folder directly, which will throw an exception on some devices
-        try
-        {
-            foreach (string filePath in FileHelper.GetFilesInDirectory(objects3d.Path, "*.ou"))
-            {
-                TextLogger.Log($"Loading model ({Path.GetFileNameWithoutExtension(filePath)})");
-                byte[] buffer = await ReadFileBytesAsync(filePath);
-                await _objectAnchorsService.AddObjectModelAsync(buffer);
-            }
-        }
-        catch(UnauthorizedAccessException ex)
-        {
-            Debug.Log("access denied to objects 3d folder. Trying through path");
-            StorageFolder objects3dAcc = await StorageFolder.GetFolderFromPathAsync(objects3d.Path);
-            foreach(StorageFile file in await objects3dAcc.GetFilesAsync(CommonFileQuery.OrderByName))
-            {
-                if (Path.GetExtension(file.Name) == ".ou")
-                {
-                    TextLogger.Log($"Loading model ({file.Path} {file.Name}");
-                    byte[] buffer = await ReadFileBytesAsync(file);
-                    await _objectAnchorsService.AddObjectModelAsync(buffer);
-                }
-            }
-        }
-        catch(Exception ex)
-        {
-            Debug.LogWarning("unexpected exception accessing objects 3d folder");
-            Debug.LogException(ex);
-        }
+		// First try using the static folder directly, which will throw an exception on some devices
+		try
+		{
+			foreach (string filePath in FileHelper.GetFilesInDirectory(objects3d.Path, "*.ou"))
+			{
+				TextLogger.Log($"Loading model ({Path.GetFileNameWithoutExtension(filePath)})");
+				byte[] buffer = await ReadFileBytesAsync(filePath);
+				await _objectAnchorsService.AddObjectModelAsync(buffer);
+			}
+		}
+		catch (UnauthorizedAccessException ex)
+		{
+			Debug.Log("access denied to objects 3d folder. Trying through path");
+			StorageFolder objects3dAcc = await StorageFolder.GetFolderFromPathAsync(objects3d.Path);
+			foreach (StorageFile file in await objects3dAcc.GetFilesAsync(CommonFileQuery.OrderByName))
+			{
+				if (Path.GetExtension(file.Name) == ".ou")
+				{
+					TextLogger.Log($"Loading model ({file.Path} {file.Name}");
+					byte[] buffer = await ReadFileBytesAsync(file);
+					await _objectAnchorsService.AddObjectModelAsync(buffer);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Debug.LogWarning("unexpected exception accessing objects 3d folder");
+			Debug.LogException(ex);
+		}
 #endif
 
 		_objectQueries = InitializeObjectQueries();
@@ -570,29 +574,29 @@ public class ObjectSearch : MonoBehaviour
 	}
 
 #if WINDOWS_UWP
-    private async Task<byte[]> ReadFileBytesAsync(string filePath)
-    {
-        StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
-        if (file == null)
-        {
-            return null; 
-        }
+	private async Task<byte[]> ReadFileBytesAsync(string filePath)
+	{
+		StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+		if (file == null)
+		{
+			return null;
+		}
 
-        return await ReadFileBytesAsync(file);
-    }    
+		return await ReadFileBytesAsync(file);
+	}
 
-    private async Task<byte[]> ReadFileBytesAsync(StorageFile file)
-    {
-        using (IRandomAccessStream stream = await file.OpenReadAsync())
-        {
-            using (var reader = new DataReader(stream.GetInputStreamAt(0)))
-            {
-                await reader.LoadAsync((uint)stream.Size);
-                var bytes = new byte[stream.Size];
-                reader.ReadBytes(bytes);
-                return bytes;
-            }
-        }
-    }
+	private async Task<byte[]> ReadFileBytesAsync(StorageFile file)
+	{
+		using (IRandomAccessStream stream = await file.OpenReadAsync())
+		{
+			using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+			{
+				await reader.LoadAsync((uint)stream.Size);
+				var bytes = new byte[stream.Size];
+				reader.ReadBytes(bytes);
+				return bytes;
+			}
+		}
+	}
 #endif
 }

@@ -1,14 +1,21 @@
+#region
+
 using UnityEngine;
 
-public class ObjectOriginTransform : MonoBehaviour
-{
-	// Start is called before the first frame update
-	private void Start()
-	{
-	}
+#endregion
 
-	// Update is called once per frame
-	private void Update()
+namespace ObjectTracking
+{
+	public class ObjectOriginTransform : MonoBehaviour
 	{
+		// Start is called before the first frame update
+		private void Start()
+		{
+		}
+
+		// Update is called once per frame
+		private void Update()
+		{
+		}
 	}
 }

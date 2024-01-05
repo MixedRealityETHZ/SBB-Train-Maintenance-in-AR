@@ -1,31 +1,39 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class ModelSwitcher : MonoBehaviour
+#endregion
+
+namespace ObjectTracking
 {
-	public List<ModelSettings> visualizationPrefabs = new();
-
-	private GameObject _visualizationPrefabInstance;
-
-	public void SetModel(string name)
+	public class ModelSwitcher : MonoBehaviour
 	{
-		if (_visualizationPrefabInstance != null) Destroy(_visualizationPrefabInstance);
+		public List<ModelSettings> visualizationPrefabs = new();
 
-		var prefab = visualizationPrefabs.Find(x => x.Name == name).VisualizationPrefab;
-		if (prefab is null)
+		private GameObject _visualizationPrefabInstance;
+
+		public void SetModel(string modelName)
 		{
-			Debug.LogWarning($"No visualization prefab for model with name: {name}");
-			return;
+			if (_visualizationPrefabInstance != null) Destroy(_visualizationPrefabInstance);
+
+			var prefab = visualizationPrefabs.Find(x => x.name == modelName).visualizationPrefab;
+			if (prefab is null)
+			{
+				Debug.LogWarning($"No visualization prefab for model with name: {modelName}");
+				return;
+			}
+
+			_visualizationPrefabInstance = Instantiate(prefab, gameObject.transform);
 		}
 
-		_visualizationPrefabInstance = Instantiate(prefab, gameObject.transform);
-	}
-
-	[Serializable]
-	public struct ModelSettings
-	{
-		public string Name;
-		public GameObject VisualizationPrefab;
+		[Serializable]
+		public struct ModelSettings
+		{
+			public string name;
+			public GameObject visualizationPrefab;
+		}
 	}
 }

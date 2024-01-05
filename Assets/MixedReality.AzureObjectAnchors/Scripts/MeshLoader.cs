@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Azure.ObjectAnchors;
@@ -6,6 +8,8 @@ using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Vector3 = System.Numerics.Vector3;
+
+#endregion
 
 public class MeshLoader : MonoBehaviour
 {

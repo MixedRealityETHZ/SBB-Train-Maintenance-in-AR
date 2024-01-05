@@ -2,7 +2,11 @@
 // Licensed under the MIT License.
 
 
+#region
+
 using UnityEngine;
+
+#endregion
 
 public class ViewButtonControl : MonoBehaviour
 {

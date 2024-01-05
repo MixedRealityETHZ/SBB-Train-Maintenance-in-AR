@@ -1,11 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#region
+
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+
+#endregion
 
 public class TextLogger : MonoBehaviour
 {
@@ -48,10 +52,10 @@ public class TextLogger : MonoBehaviour
 			LoggerText.text += $"{item}\n";
 	}
 
-    /// <summary>
-    ///     Log message without adding timestamp.
-    /// </summary>
-    public static void LogRaw(string message)
+	/// <summary>
+	///     Log message without adding timestamp.
+	/// </summary>
+	public static void LogRaw(string message)
 	{
 		Debug.Log(message);
 		while (Instance._messageQueue.Count >= MaxMessageCountToShow)

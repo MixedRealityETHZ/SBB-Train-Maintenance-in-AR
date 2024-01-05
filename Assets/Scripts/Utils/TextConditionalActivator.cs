@@ -1,19 +1,26 @@
+#region
+
 using TMPro;
 using UnityEngine;
 
-public class TextConditionalActivator : MonoBehaviour
+#endregion
+
+namespace Utils
 {
-	// Needs to be assigned from the editor as `Start()` does not get called on disabled objects
-	public TMP_Text text;
-
-	private string _initialText;
-
-	public void SetActiveConditional(bool state)
+	public class TextConditionalActivator : MonoBehaviour
 	{
-		if (_initialText == null) _initialText = text.text;
+		// Needs to be assigned from the editor as `Start()` does not get called on disabled objects
+		public TMP_Text text;
 
-		if (!state) gameObject.SetActive(false);
+		private string _initialText;
 
-		gameObject.SetActive(text.text != _initialText);
+		public void SetActiveConditional(bool state)
+		{
+			if (_initialText == null) _initialText = text.text;
+
+			if (!state) gameObject.SetActive(false);
+
+			gameObject.SetActive(text.text != _initialText);
+		}
 	}
 }

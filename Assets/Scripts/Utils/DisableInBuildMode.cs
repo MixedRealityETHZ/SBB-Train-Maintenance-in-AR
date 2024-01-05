@@ -1,9 +1,16 @@
+#region
+
 using UnityEngine;
 
-public class DisableInBuildMode : MonoBehaviour
+#endregion
+
+namespace Utils
 {
-	private void Start()
+	public class DisableInBuildMode : MonoBehaviour
 	{
-		if (!Application.isEditor) gameObject.SetActive(false);
+		private void Start()
+		{
+			if (!Application.isEditor) gameObject.SetActive(false);
+		}
 	}
 }

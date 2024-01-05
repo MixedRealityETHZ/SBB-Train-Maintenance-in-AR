@@ -1,10 +1,17 @@
+#region
+
 using UnityEngine;
 
-public class DeactivateOnStart : MonoBehaviour
+#endregion
+
+namespace Utils
 {
-	// Start is called before the first frame update
-	private void Awake()
+	public class DeactivateOnStart : MonoBehaviour
 	{
-		gameObject.SetActive(false);
+		// Start is called before the first frame update
+		private void Awake()
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }

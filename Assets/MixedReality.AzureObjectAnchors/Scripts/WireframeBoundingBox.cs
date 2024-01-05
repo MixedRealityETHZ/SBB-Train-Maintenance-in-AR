@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#region
+
 using UnityEngine;
+
+#endregion
 
 /// <summary>
 ///     A class to draw a box around a given Bounds
@@ -26,14 +30,14 @@ public class WireframeBoundingBox : MonoBehaviour
 		if (_showBounds) DrawLines();
 	}
 
-    /// <summary>
-    ///     Shows the box around the bounds provided.
-    /// </summary>
-    /// <param name="center">the dimensions of the box to draw</param>
-    /// <param name="size">the size of the box</param>
-    /// <param name="rotation">the orientation of the bounding box</param>
-    /// <param name="wireframeMaterial">the material to draw the bounding box with</param>
-    public void UpdateBounds(Vector3 center, Vector3 size, Quaternion rotation, Material wireframeMaterial)
+	/// <summary>
+	///     Shows the box around the bounds provided.
+	/// </summary>
+	/// <param name="center">the dimensions of the box to draw</param>
+	/// <param name="size">the size of the box</param>
+	/// <param name="rotation">the orientation of the bounding box</param>
+	/// <param name="wireframeMaterial">the material to draw the bounding box with</param>
+	public void UpdateBounds(Vector3 center, Vector3 size, Quaternion rotation, Material wireframeMaterial)
 	{
 		_center = center;
 		_extents = size * 0.5f;
@@ -48,20 +52,20 @@ public class WireframeBoundingBox : MonoBehaviour
 		_showBounds = true;
 	}
 
-    /// <summary>
-    ///     Hide the bounds
-    /// </summary>
-    public void HideBounds()
+	/// <summary>
+	///     Hide the bounds
+	/// </summary>
+	public void HideBounds()
 	{
 		_showBounds = false;
 	}
 
-    /// <summary>
-    ///     Calculate the vertices of the box.
-    ///     Transforms the vertices based on the orientation and scale of the object passed in.
-    /// </summary>
-    /// <param name="objectToDrawTransform"></param>
-    private void CalculateVertexPositions(Transform objectToDrawTransform)
+	/// <summary>
+	///     Calculate the vertices of the box.
+	///     Transforms the vertices based on the orientation and scale of the object passed in.
+	/// </summary>
+	/// <param name="objectToDrawTransform"></param>
+	private void CalculateVertexPositions(Transform objectToDrawTransform)
 	{
 		// Apply scale and rotation first centered at origin
 		_boxEdges[0] = _rotation * new Vector3(-_extents.x, _extents.y, -_extents.z); // Front top left corner
@@ -86,10 +90,10 @@ public class WireframeBoundingBox : MonoBehaviour
 		_boxEdges[7] = objectToDrawTransform.TransformPoint(_boxEdges[7]);
 	}
 
-    /// <summary>
-    ///     Draws a line between the vertices of the bounding box
-    /// </summary>
-    private void DrawLines()
+	/// <summary>
+	///     Draws a line between the vertices of the bounding box
+	/// </summary>
+	private void DrawLines()
 	{
 		GL.PushMatrix();
 		_wireframeMaterial.SetPass(0);

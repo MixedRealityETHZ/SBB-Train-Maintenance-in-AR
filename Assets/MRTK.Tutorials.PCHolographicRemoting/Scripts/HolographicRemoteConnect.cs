@@ -1,8 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+#region
+
 using Microsoft.MixedReality.OpenXR.Remoting;
 using UnityEngine;
+
+#endregion
 
 public class HolographicRemoteConnect : MonoBehaviour
 {

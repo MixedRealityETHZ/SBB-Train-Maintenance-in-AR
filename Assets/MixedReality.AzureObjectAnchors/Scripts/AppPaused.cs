@@ -1,8 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#region
+
 using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEngine;
+
+#endregion
 
 public class AppPaused : MonoBehaviour
 {
