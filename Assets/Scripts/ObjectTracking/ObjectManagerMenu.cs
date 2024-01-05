@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using MixedReality.Toolkit.UX;
 using TMPro;
@@ -24,10 +23,7 @@ public class ObjectManagerMenu : MonoBehaviour
 	public void ToggleActive()
 	{
 		gameObject.SetActive(!gameObject.activeSelf);
-		if (gameObject.activeSelf)
-		{
-			InGameNotification.ClearNotification();
-		}
+		if (gameObject.activeSelf) InGameNotification.ClearNotification();
 	}
 
 	public void AddObject(Guid modelId, Guid instanceId, string objectName)
@@ -47,9 +43,6 @@ public class ObjectManagerMenu : MonoBehaviour
 		_buttons.Remove(modelId, out var button);
 		Destroy(button);
 
-		if (_buttons.Count == 0)
-		{
-			noObjectText.SetActive(true);
-		}
+		if (_buttons.Count == 0) noObjectText.SetActive(true);
 	}
 }

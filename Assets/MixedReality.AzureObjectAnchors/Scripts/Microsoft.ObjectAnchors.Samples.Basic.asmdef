@@ -1,19 +1,19 @@
 ﻿{
-	"name": "Microsoft.ObjectAnchors.Samples.Basic",
-    "references": [
-        "Microsoft.ObjectAnchors.Runtime.Api",
-        "Microsoft.ObjectAnchors.Runtime.Core"
-    ],
-    "includePlatforms": [
-        "Editor",
-        "WSA",
-        "WindowsStandalone64"
-    ],
-    "versionDefines": [
-        {
-            "name": "com.microsoft.windows.mixedreality.dotnetwinrt",
-            "expression": "",
-            "define": "DOTNETWINRT_PRESENT"
-        }
-    ]
+  "name": "Microsoft.ObjectAnchors.Samples.Basic",
+  "references": [
+    "Microsoft.ObjectAnchors.Runtime.Api",
+    "Microsoft.ObjectAnchors.Runtime.Core"
+  ],
+  "includePlatforms": [
+    "Editor",
+    "WSA",
+    "WindowsStandalone64"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.microsoft.windows.mixedreality.dotnetwinrt",
+      "expression": "",
+      "define": "DOTNETWINRT_PRESENT"
+    }
+  ]
 }

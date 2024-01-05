@@ -6,17 +6,17 @@
 #endif
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.ObjectAnchors;
-using UnityEngine;
+using Microsoft.Azure.ObjectAnchors.SpatialGraph;
 using Microsoft.Azure.ObjectAnchors.Unity;
-using Unity.VisualScripting;
-
+using UnityEditor;
+using UnityEngine;
 #if WINDOWS_UWP
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -37,7 +37,7 @@ public class CustomObjectSearch : MonoBehaviour
 		Box,
 		FieldOfView,
 		Sphere
-	};
+	}
 
 	[Tooltip("Far distance in meter of object search frustum.")]
 	public float SearchFrustumFarDistance = 4.0f;
@@ -53,15 +53,13 @@ public class CustomObjectSearch : MonoBehaviour
 
 	[Tooltip("Search area shape.")] public SearchAreaKind SearchAreaShape = SearchAreaKind.Box;
 
-	[Tooltip("Observation mode.")]
-	public Microsoft.Azure.ObjectAnchors.ObjectObservationMode ObservationMode =
-		Microsoft.Azure.ObjectAnchors.ObjectObservationMode.Ambient;
+	[Tooltip("Observation mode.")] public ObjectObservationMode ObservationMode = ObjectObservationMode.Ambient;
 
 	// [Tooltip("Tracking mode.")]
 	// public ObjectInstanceTrackingMode trackingMode = ObjectInstanceTrackingMode.LowLatencyCoarsePosition;
 
 	[Tooltip("Show environment observations.")]
-	public bool ShowEnvironmentObservations = false;
+	public bool ShowEnvironmentObservations;
 
 	[Tooltip("Search single vs. multiple instances.")]
 	public bool SearchSingleInstance = true;
@@ -101,36 +99,35 @@ public class CustomObjectSearch : MonoBehaviour
 
 
 	/// <summary>
-	/// Flag to indicate the detection operation, 0 - in detection, 1 - detection completed.
+	///     Flag to indicate the detection operation, 0 - in detection, 1 - detection completed.
 	/// </summary>
 	private int _detectionCompleted = 1;
 
 	/// <summary>
-	/// Cached camera instance.
+	///     Cached camera instance.
 	/// </summary>
 	private Camera _cachedCameraMain;
 
 	/// <summary>
-	/// Object Anchors service object.
+	///     Object Anchors service object.
 	/// </summary>
 	private IObjectAnchorsService _objectAnchorsService;
 
 	/// <summary>
-	/// Placement of each object instance with guid as instance id.
+	///     Placement of each object instance with guid as instance id.
 	/// </summary>
-	private Dictionary<Guid, MultiAnchorObjectPlacement> _objectPlacements =
-		new Dictionary<Guid, MultiAnchorObjectPlacement>();
+	private readonly Dictionary<Guid, MultiAnchorObjectPlacement> _objectPlacements = new();
 
-	private Dictionary<Guid, GameObject> _visualizationMeshes = new Dictionary<Guid, GameObject>();
+	private readonly Dictionary<Guid, GameObject> _visualizationMeshes = new();
 
 	/// <summary>
-	/// Query associated with each model with guid as model id.
+	///     Query associated with each model with guid as model id.
 	/// </summary>
-	private Dictionary<Guid, ObjectQueryState> _objectQueries = new Dictionary<Guid, ObjectQueryState>();
+	private Dictionary<Guid, ObjectQueryState> _objectQueries = new();
 
-	private Dictionary<Guid, InstanceState> _prevInstanceStates = new();
+	private readonly Dictionary<Guid, InstanceState> _prevInstanceStates = new();
 
-	private Dictionary<Guid, string> _modelIdToName = new();
+	private readonly Dictionary<Guid, string> _modelIdToName = new();
 
 	private Dictionary<Guid, ObjectQueryState> InitializeObjectQueries()
 	{
@@ -144,10 +141,7 @@ public class CustomObjectSearch : MonoBehaviour
 
 			var queryState = new GameObject($"ObjectQueryState for model {modelId}").AddComponent<ObjectQueryState>();
 			queryState.Query = _objectAnchorsService.CreateObjectQuery(modelId, ObservationMode);
-			if (ShowEnvironmentObservations)
-			{
-				queryState.EnvironmentMaterial = EnvironmentMaterial;
-			}
+			if (ShowEnvironmentObservations) queryState.EnvironmentMaterial = EnvironmentMaterial;
 
 			objectQueries.Add(modelId, queryState);
 		}
@@ -158,52 +152,44 @@ public class CustomObjectSearch : MonoBehaviour
 	private enum ObjectAnchorsServiceEventKind
 	{
 		/// <summary>
-		/// Attempted to detect objects.
+		///     Attempted to detect objects.
 		/// </summary>
 		DetectionAttempted,
 
 		/// <summary>
-		/// An new object is found for the first time.
+		///     An new object is found for the first time.
 		/// </summary>
 		Added,
 
 		/// <summary>
-		/// State of a tracked object changed.
+		///     State of a tracked object changed.
 		/// </summary>
 		Updated,
 
 		/// <summary>
-		/// An object lost tracking.
+		///     An object lost tracking.
 		/// </summary>
-		Removed,
+		Removed
 	}
 
 	private class ObjectAnchorsServiceEvent
 	{
-		public ObjectAnchorsServiceEventKind Kind;
 		public IObjectAnchorsServiceEventArgs Args;
+		public ObjectAnchorsServiceEventKind Kind;
 	}
 
 	/// <summary>
-	/// A queue to cache the Object Anchors events.
-	/// Events are added in the callbacks from Object Anchors service, then consumed in the Update method.
+	///     A queue to cache the Object Anchors events.
+	///     Events are added in the callbacks from Object Anchors service, then consumed in the Update method.
 	/// </summary>
-	private ConcurrentQueue<ObjectAnchorsServiceEvent> _objectAnchorsEventQueue =
-		new ConcurrentQueue<ObjectAnchorsServiceEvent>();
-
+	private readonly ConcurrentQueue<ObjectAnchorsServiceEvent> _objectAnchorsEventQueue = new();
 
 
 	/// <summary>
-	/// Returns true if diagnostics capture is enabled.
+	///     Returns true if diagnostics capture is enabled.
 	/// </summary>
-	public bool IsDiagnosticsCaptureEnabled
-	{
-		get
-		{
-			return File.Exists(Path.Combine(Application.persistentDataPath.Replace('/', '\\'),
-				DiagnosticsSentinelFilename));
-		}
-	}
+	public bool IsDiagnosticsCaptureEnabled =>
+		File.Exists(Path.Combine(Application.persistentDataPath.Replace('/', '\\'), DiagnosticsSentinelFilename));
 
 	private void Awake()
 	{
@@ -218,7 +204,7 @@ public class CustomObjectSearch : MonoBehaviour
 		{
 			await _objectAnchorsService.InitializeAsync();
 		}
-		catch (System.ArgumentException ex)
+		catch (ArgumentException ex)
 		{
 #if WINDOWS_UWP
             string message = ex.Message;
@@ -227,13 +213,13 @@ public class CustomObjectSearch : MonoBehaviour
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            new Windows.UI.Popups.MessageDialog(message, "Invalid account information").ShowAsync(), true);
             await dialog;
 #elif UNITY_EDITOR
-			UnityEditor.EditorUtility.DisplayDialog("Invaild account information", ex.Message, "OK");
+			EditorUtility.DisplayDialog("Invaild account information", ex.Message, "OK");
 #endif // WINDOWS_UWP
 			throw ex;
 		}
 
 		_objectAnchorsService.Pause();
-		Debug.Log($"Object search initialized.");
+		Debug.Log("Object search initialized.");
 
 		foreach (var file in FileHelper.GetFilesInDirectory(Application.persistentDataPath, "*.ou"))
 		{
@@ -290,7 +276,7 @@ public class CustomObjectSearch : MonoBehaviour
 
 		if (IsDiagnosticsCaptureEnabled)
 		{
-			Debug.Log($"Start capture diagnostics.");
+			Debug.Log("Start capture diagnostics.");
 
 			_objectAnchorsService.StartDiagnosticsSession();
 		}
@@ -327,12 +313,8 @@ public class CustomObjectSearch : MonoBehaviour
 		lock (_objectQueries)
 		{
 			foreach (var query in _objectQueries)
-			{
 				if (query.Value != null)
-				{
 					Destroy(query.Value.gameObject);
-				}
-			}
 
 			_objectQueries.Clear();
 		}
@@ -405,12 +387,11 @@ public class CustomObjectSearch : MonoBehaviour
 
 		ObjectAnchorsServiceEvent _event;
 		while (_objectAnchorsEventQueue.TryDequeue(out _event))
-		{
 			switch (_event.Kind)
 			{
 				case ObjectAnchorsServiceEventKind.DetectionAttempted:
 				{
-					Debug.Log($"detection attempted");
+					Debug.Log("detection attempted");
 					break;
 				}
 				case ObjectAnchorsServiceEventKind.Added:
@@ -423,7 +404,7 @@ public class CustomObjectSearch : MonoBehaviour
 					objectManagerMenu.AddObject(_event.Args.ModelId, _event.Args.InstanceId,
 						_modelIdToName[_event.Args.ModelId]);
 					DrawBoundingBox(_event.Args);
-					PlaceVisualizationMesh(_event.Args, replace: false);
+					PlaceVisualizationMesh(_event.Args, false);
 					break;
 				}
 				case ObjectAnchorsServiceEventKind.Updated:
@@ -433,7 +414,7 @@ public class CustomObjectSearch : MonoBehaviour
 					          $"position {_event.Args.Location?.Position}, " +
 					          $"rotation {_event.Args.Location?.Orientation}");
 					DrawBoundingBox(_event.Args);
-					PlaceVisualizationMesh(_event.Args, replace: false);
+					PlaceVisualizationMesh(_event.Args, false);
 					break;
 				}
 				case ObjectAnchorsServiceEventKind.Removed:
@@ -449,7 +430,6 @@ public class CustomObjectSearch : MonoBehaviour
 					break;
 				}
 			}
-		}
 	}
 
 	public void ResetObject(Guid modelId, Guid instanceId)
@@ -469,7 +449,7 @@ public class CustomObjectSearch : MonoBehaviour
 		// If replace is true:
 		// - If mesh not yet created, create and add to dict, update positions
 		// - If mesh already in dict, delete current mesh, create new and replace, update positions
-		var curInstanceState = new InstanceState()
+		var curInstanceState = new InstanceState
 		{
 			Position = instance.Location?.Position,
 			Rotation = instance.Location?.Orientation,
@@ -481,10 +461,8 @@ public class CustomObjectSearch : MonoBehaviour
 		if (!found || replace)
 		{
 			if (replace && found)
-			{
 				// If replace, delete old mesh
 				Destroy(visualizationMesh);
-			}
 
 			visualizationMesh = Instantiate(VisualizationPrefab);
 			isNew = true;
@@ -542,8 +520,8 @@ public class CustomObjectSearch : MonoBehaviour
 		// Set visualizationMesh position to tracked location
 		Debug.Assert(instance.Location.HasValue);
 		var loc = instance.Location.Value;
-		smoothTransform.SetPosition(loc.Position, instantaneous: isNew);
-		smoothTransform.SetRotation(loc.Orientation, instantaneous: isNew);
+		smoothTransform.SetPosition(loc.Position, isNew);
+		smoothTransform.SetRotation(loc.Orientation, isNew);
 
 		// Apply center to origin transform to modelOrigin
 		var originToCenterTransform = _objectAnchorsService.GetModelOriginToCenterTransform(instance.ModelId);
@@ -580,9 +558,7 @@ public class CustomObjectSearch : MonoBehaviour
 		}
 
 		if (instance.SurfaceCoverage > placement.SurfaceCoverage || !instance.Location.HasValue)
-		{
 			placement.UpdatePlacement(instance);
-		}
 	}
 
 	private void TrySearchObject()
@@ -590,14 +566,11 @@ public class CustomObjectSearch : MonoBehaviour
 		if (_objectAnchorsService.Status == ObjectAnchorsServiceStatus.Paused) return;
 		if (Interlocked.CompareExchange(ref _detectionCompleted, 0, 1) == 1)
 		{
-			if (_cachedCameraMain == null)
-			{
-				_cachedCameraMain = Camera.main;
-			}
+			if (_cachedCameraMain == null) _cachedCameraMain = Camera.main;
 
 			var cameraLocation = new ObjectAnchorsLocation
 			{
-				Position = _cachedCameraMain.transform.position, Orientation = _cachedCameraMain.transform.rotation,
+				Position = _cachedCameraMain.transform.position, Orientation = _cachedCameraMain.transform.rotation
 			};
 
 #if SPATIALCOORDINATESYSTEM_API_PRESENT
@@ -624,18 +597,13 @@ public class CustomObjectSearch : MonoBehaviour
 		}
 	}
 
-	private Task DetectObjectAsync(
-		Microsoft.Azure.ObjectAnchors.SpatialGraph.SpatialGraphCoordinateSystem? coordinateSystem,
-		ObjectAnchorsLocation cameraLocation)
+	private Task DetectObjectAsync(SpatialGraphCoordinateSystem? coordinateSystem, ObjectAnchorsLocation cameraLocation)
 	{
 		//
 		// Coordinate system may not be available at this time, try it later.
 		//
 
-		if (!coordinateSystem.HasValue)
-		{
-			return Task.CompletedTask;
-		}
+		if (!coordinateSystem.HasValue) return Task.CompletedTask;
 
 		//
 		// Get camera location and coordinate system.
@@ -645,7 +613,7 @@ public class CustomObjectSearch : MonoBehaviour
 		var estimatedTargetLocation = new ObjectAnchorsLocation
 		{
 			Position = cameraLocation.Position + cameraForward * SearchFrustumFarDistance * 0.5f,
-			Orientation = Quaternion.Euler(0.0f, cameraLocation.Orientation.eulerAngles.y, 0.0f),
+			Orientation = Quaternion.Euler(0.0f, cameraLocation.Orientation.eulerAngles.y, 0.0f)
 		};
 
 		//
@@ -666,9 +634,7 @@ public class CustomObjectSearch : MonoBehaviour
 				var offset = instancePosition - cameraLocation.Position;
 
 				if (offset.magnitude > SearchFrustumFarDistance * 1.5f)
-				{
 					_objectAnchorsService.RemoveObjectInstance(instance.InstanceId);
-				}
 			}
 		}
 
@@ -676,11 +642,12 @@ public class CustomObjectSearch : MonoBehaviour
 		// Detect object(s) in field of view, bounding box, or sphere.
 		//
 
-		var objectQueries = new List<Microsoft.Azure.ObjectAnchors.ObjectQuery>();
+		var objectQueries = new List<ObjectQuery>();
 
 		var trackingResults = _objectAnchorsService.TrackingResults;
 
 		lock (_objectQueries)
+		{
 			foreach (var objectQuery in _objectQueries)
 			{
 				var modelId = objectQuery.Key;
@@ -691,12 +658,8 @@ public class CustomObjectSearch : MonoBehaviour
 				//
 
 				if (SearchSingleInstance)
-				{
 					if (trackingResults.Where(r => r.ModelId == modelId).Count() > 0)
-					{
 						continue;
-					}
-				}
 
 				var modelBox = _objectAnchorsService.GetModelBoundingBox(modelId);
 				Debug.Assert(modelBox.HasValue);
@@ -707,7 +670,7 @@ public class CustomObjectSearch : MonoBehaviour
 					case SearchAreaKind.Box:
 					{
 						// Adapt bounding box size to model size. Note that Extents.z is model's height.
-						float modelXYSize = new Vector2(modelBox.Value.Extents.x, modelBox.Value.Extents.y).magnitude;
+						var modelXYSize = new Vector2(modelBox.Value.Extents.x, modelBox.Value.Extents.y).magnitude;
 
 						var boundingBox = new ObjectAnchorsBoundingBox
 						{
@@ -715,12 +678,11 @@ public class CustomObjectSearch : MonoBehaviour
 							Orientation = estimatedTargetLocation.Orientation,
 							Extents = new Vector3(modelXYSize * SearchAreaScaleFactor,
 								modelBox.Value.Extents.z * SearchAreaScaleFactor,
-								modelXYSize * SearchAreaScaleFactor),
+								modelXYSize * SearchAreaScaleFactor)
 						};
 
-						query.SearchAreas.Add(
-							Microsoft.Azure.ObjectAnchors.ObjectSearchArea.FromOrientedBox(coordinateSystem.Value,
-								boundingBox.ToSpatialGraph()));
+						query.SearchAreas.Add(ObjectSearchArea.FromOrientedBox(coordinateSystem.Value,
+							boundingBox.ToSpatialGraph()));
 						break;
 					}
 
@@ -732,29 +694,27 @@ public class CustomObjectSearch : MonoBehaviour
 							Orientation = cameraLocation.Orientation,
 							FarDistance = SearchFrustumFarDistance,
 							HorizontalFieldOfViewInDegrees = SearchFrustumHorizontalFovInDegrees,
-							AspectRatio = SearchFrustumAspectRatio,
+							AspectRatio = SearchFrustumAspectRatio
 						};
 
-						query.SearchAreas.Add(
-							Microsoft.Azure.ObjectAnchors.ObjectSearchArea.FromFieldOfView(coordinateSystem.Value,
-								fieldOfView.ToSpatialGraph()));
+						query.SearchAreas.Add(ObjectSearchArea.FromFieldOfView(coordinateSystem.Value,
+							fieldOfView.ToSpatialGraph()));
 						break;
 					}
 
 					case SearchAreaKind.Sphere:
 					{
 						// Adapt sphere radius to model size.
-						float modelDiagonalSize = modelBox.Value.Extents.magnitude;
+						var modelDiagonalSize = modelBox.Value.Extents.magnitude;
 
 						var sphere = new ObjectAnchorsSphere
 						{
 							Center = estimatedTargetLocation.Position,
-							Radius = modelDiagonalSize * 0.5f * SearchAreaScaleFactor,
+							Radius = modelDiagonalSize * 0.5f * SearchAreaScaleFactor
 						};
 
-						query.SearchAreas.Add(
-							Microsoft.Azure.ObjectAnchors.ObjectSearchArea.FromSphere(coordinateSystem.Value,
-								sphere.ToSpatialGraph()));
+						query.SearchAreas.Add(ObjectSearchArea.FromSphere(coordinateSystem.Value,
+							sphere.ToSpatialGraph()));
 						break;
 					}
 				}
@@ -764,6 +724,7 @@ public class CustomObjectSearch : MonoBehaviour
 
 				objectQueries.Add(query);
 			}
+		}
 
 		//
 		// Pause a while if detection is not required.

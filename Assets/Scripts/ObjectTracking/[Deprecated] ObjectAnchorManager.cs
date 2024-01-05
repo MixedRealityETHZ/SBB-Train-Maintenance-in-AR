@@ -11,20 +11,19 @@ using Microsoft.Azure.ObjectAnchors.SpatialGraph;
 using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEngine;
 using UnityEngine.Events;
-using System.IO;
-
 #if WINDOWS_UWP
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Storage.Search;
 #endif
 
+[Obsolete("Class is deprecated. Please use class CustomObjectSearch instead.", true)]
 public class ObjectAnchorManager : MonoBehaviour
 {
 	private IObjectAnchorsService _objectAnchorsService;
 	private Camera _mainCamera;
 	private SpatialGraphCoordinateSystem? _coordinateSystem;
-	private Dictionary<Guid, ObjectModelSettings> _modelSettings = new();
+	private readonly Dictionary<Guid, ObjectModelSettings> _modelSettings = new();
 
 	public ObjectModelSettings[] objectModels = { };
 	public float searchAreaFarDistance = 4.0f;
@@ -103,7 +102,7 @@ public class ObjectAnchorManager : MonoBehaviour
             {
 	            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
 	            Debug.Log($"Loading model ({fileNameWithoutExtension})");
-                byte[] buffer =  await ReadFileBytesAsync(filePath);
+                byte[] buffer = await ReadFileBytesAsync(filePath);
                 var modelId = await _objectAnchorsService.AddObjectModelAsync(buffer);
                 var modelSettings = objectModels.First(x => x.modelNameWithoutExtension == fileNameWithoutExtension);
                 _modelSettings[modelId] = modelSettings;
@@ -119,9 +118,10 @@ public class ObjectAnchorManager : MonoBehaviour
                 {
 	                var fileNameWithoutExtension = file.Name.Replace(".ou", "");
                     Debug.Log($"Loading model ({file.Path} {file.Name}");
-                    byte[] buffer =  await ReadFileBytesAsync(file);
+                    byte[] buffer = await ReadFileBytesAsync(file);
                     var modelId = await _objectAnchorsService.AddObjectModelAsync(buffer);
-                    var modelSettings = objectModels.First(x => x.modelNameWithoutExtension == fileNameWithoutExtension);
+                    var modelSettings =
+																																																					                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               objectModels.First(x => x.modelNameWithoutExtension == fileNameWithoutExtension);
                     _modelSettings[modelId] = modelSettings;
                 }
             }
@@ -196,26 +196,26 @@ public class ObjectAnchorManager : MonoBehaviour
 		// Adapt bounding box size to model size. Note that Extents.z is model's height.
 		var modelBox = _objectAnchorsService.GetModelBoundingBox(modelId);
 		Debug.Assert(modelBox.HasValue);
-		float modelXYSize = new Vector2(modelBox.Value.Extents.x, modelBox.Value.Extents.y).magnitude;
+		var modelXYSize = new Vector2(modelBox.Value.Extents.x, modelBox.Value.Extents.y).magnitude;
 
 		var cameraLocation = new ObjectAnchorsLocation
 		{
-			Position = _mainCamera.transform.position, Orientation = _mainCamera.transform.rotation,
+			Position = _mainCamera.transform.position, Orientation = _mainCamera.transform.rotation
 		};
 
 		var cameraForward = cameraLocation.Orientation * Vector3.forward;
 		var estimatedTargetLocation = new ObjectAnchorsLocation
 		{
 			Position = cameraLocation.Position + cameraForward * searchAreaFarDistance * 0.5f,
-			Orientation = Quaternion.Euler(0.0f, cameraLocation.Orientation.eulerAngles.y, 0.0f),
+			Orientation = Quaternion.Euler(0.0f, cameraLocation.Orientation.eulerAngles.y, 0.0f)
 		};
 
 		var boundingBox = new ObjectAnchorsBoundingBox
 		{
 			Center = estimatedTargetLocation.Position,
 			Orientation = estimatedTargetLocation.Orientation,
-			Extents = new Vector3(modelXYSize * searchAreaScaleFactor, modelBox.Value.Extents.z * searchAreaScaleFactor,
-				modelXYSize * searchAreaScaleFactor),
+			Extents = new Vector3(modelXYSize * searchAreaScaleFactor,
+				modelBox.Value.Extents.z * searchAreaScaleFactor, modelXYSize * searchAreaScaleFactor)
 		};
 		return boundingBox;
 	}
@@ -251,10 +251,8 @@ public class ObjectAnchorManager : MonoBehaviour
 	private void HandleTrackingResult(IObjectAnchorsTrackingResult result, GameObject objectAnchor)
 	{
 		if (result.Location == null)
-		{
 			// Nothing to do
 			return;
-		}
 
 		var location = result.Location.Value;
 
@@ -275,17 +273,12 @@ public class ObjectAnchorManager : MonoBehaviour
 
 	private void DebugPrintResult(IObjectAnchorsTrackingResult result)
 	{
-		Debug.Log(string.Join("\n",
-			new[]
-			{
-				$"Tracking result for {result.ModelId} (instance: {result.InstanceId})",
-				$"Position:      {result.Location?.Position}",
-				$"Rotation:      {result.Location?.Orientation.eulerAngles}",
-				$"Coverage:      {result.SurfaceCoverage}", $"Scale change:  {result.ScaleChange}",
-				$"Tracking mode: {result.TrackingMode}", $"Last updated:  {result.LastUpdatedTime}"
-			}));
+		Debug.Log(string.Join("\n", $"Tracking result for {result.ModelId} (instance: {result.InstanceId})",
+			$"Position:      {result.Location?.Position}", $"Rotation:      {result.Location?.Orientation.eulerAngles}",
+			$"Coverage:      {result.SurfaceCoverage}", $"Scale change:  {result.ScaleChange}",
+			$"Tracking mode: {result.TrackingMode}", $"Last updated:  {result.LastUpdatedTime}"));
 	}
-	
+
 #if WINDOWS_UWP
     private async Task<byte[]> ReadFileBytesAsync(string filePath)
     {

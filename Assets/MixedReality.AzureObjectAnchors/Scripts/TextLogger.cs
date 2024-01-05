@@ -1,86 +1,78 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
-
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TextLogger : MonoBehaviour
 {
-    private static TextLogger Instance;
-    private const int MaxMessageCountToShow = 8;
+	private const int MaxMessageCountToShow = 8;
+	private static TextLogger Instance;
 
-    public Text LoggerText;
+	public Text LoggerText;
 
-    private ConcurrentQueue<string> _messageQueue = new ConcurrentQueue<string>();
+	private readonly ConcurrentQueue<string> _messageQueue = new();
 
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
+	private void Awake()
+	{
+		if (Instance == null) Instance = this;
+	}
 
-    void Start()
-    {
-    }
+	private void Start()
+	{
+	}
 
-    void OnEnable()
-    {
-        Application.logMessageReceivedThreaded += HandleLog;
-    }
+	private void OnEnable()
+	{
+		Application.logMessageReceivedThreaded += HandleLog;
+	}
 
-    void OnDisable()
-    {
-        Application.logMessageReceivedThreaded -= HandleLog;
-    }
+	private void OnDisable()
+	{
+		Application.logMessageReceivedThreaded -= HandleLog;
+	}
 
-    void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        // Do nothing here, as this handler could be called from a non-UI thread.
-    }
+	private void HandleLog(string logString, string stackTrace, LogType type)
+	{
+		// Do nothing here, as this handler could be called from a non-UI thread.
+	}
 
-    private void ShowMessage()
-    {
-        LoggerText.text = string.Empty;
+	private void ShowMessage()
+	{
+		LoggerText.text = string.Empty;
 
-        foreach (var item in _messageQueue.Skip(System.Math.Max(0, _messageQueue.Count - MaxMessageCountToShow)))
-        {
-            LoggerText.text += $"{item}\n";
-        }
-    }
+		foreach (var item in _messageQueue.Skip(Math.Max(0, _messageQueue.Count - MaxMessageCountToShow)))
+			LoggerText.text += $"{item}\n";
+	}
 
     /// <summary>
-    /// Log message without adding timestamp.
+    ///     Log message without adding timestamp.
     /// </summary>
     public static void LogRaw(string message)
-    {
-        Debug.Log(message);
-        while (Instance._messageQueue.Count >= MaxMessageCountToShow)
-        {
-            string _message;
-            Instance._messageQueue.TryDequeue(out _message);
-        }
+	{
+		Debug.Log(message);
+		while (Instance._messageQueue.Count >= MaxMessageCountToShow)
+		{
+			string _message;
+			Instance._messageQueue.TryDequeue(out _message);
+		}
 
-        Instance._messageQueue.Enqueue(message);
-        Instance.ShowMessage();
-    }
+		Instance._messageQueue.Enqueue(message);
+		Instance.ShowMessage();
+	}
 
-    public static void Log(string message)
-    {
-        LogRaw($"[{System.DateTime.Now.ToLongTimeString()}] {message}");
-    }
+	public static void Log(string message)
+	{
+		LogRaw($"[{DateTime.Now.ToLongTimeString()}] {message}");
+	}
 
-    public static string Truncate(string source, int length)
-    {
-        if (source.Length > length)
-        {
-            source = source.Substring(0, length);
-        }
+	public static string Truncate(string source, int length)
+	{
+		if (source.Length > length) source = source.Substring(0, length);
 
-        return source;
-    }
-
+		return source;
+	}
 }

@@ -1,14 +1,12 @@
 using System.Collections;
 using System.IO;
-using System.Linq;
 using MixedReality.Toolkit.UX;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using UnityEngine.Windows.WebCam;
 
-public class LabelScanner : MonoBehaviour
+public class LabelScan : MonoBehaviour
 {
 	public Image screenshotDisplay;
 	public GameObject screenshotPanel;
@@ -19,8 +17,6 @@ public class LabelScanner : MonoBehaviour
 	private string getResultUrl;
 	private string image_path;
 	private string path;
-
-	private PhotoCapture photoCaptureObject;
 
 	// Start is called before the first frame update
 	private void Start()
@@ -36,62 +32,15 @@ public class LabelScanner : MonoBehaviour
 	{
 	}
 
-	private void OnPhotoCaptureCreated(PhotoCapture captureObject)
-	{
-		Debug.Log("Photo Capture Object Created");
-		photoCaptureObject = captureObject;
-
-		var cameraResolution =
-			PhotoCapture.SupportedResolutions.OrderByDescending(res => res.width * res.height).First();
-
-		var c = new CameraParameters();
-		c.hologramOpacity = 0.0f;
-		c.cameraResolutionWidth = cameraResolution.width;
-		c.cameraResolutionHeight = cameraResolution.height;
-		c.pixelFormat = CapturePixelFormat.BGRA32;
-
-		captureObject.StartPhotoModeAsync(c, OnPhotoModeStarted);
-	}
-
-	private void OnStoppedPhotoMode(PhotoCapture.PhotoCaptureResult result)
-	{
-		photoCaptureObject.Dispose();
-		photoCaptureObject = null;
-	}
-
-	private void OnPhotoModeStarted(PhotoCapture.PhotoCaptureResult result)
-	{
-		if (result.success)
-			photoCaptureObject.TakePhotoAsync(image_path, PhotoCaptureFileOutputFormat.JPG, OnCapturedPhotoToDisk);
-		else
-			Debug.LogError("Unable to start photo mode!");
-	}
-
-	private void OnCapturedPhotoToDisk(PhotoCapture.PhotoCaptureResult result)
-	{
-		if (result.success)
-		{
-			Debug.Log("Saved Photo to disk!");
-			photoCaptureObject.StopPhotoModeAsync(OnStoppedPhotoMode);
-		}
-		else
-		{
-			Debug.Log("Failed to save Photo to disk");
-		}
-	}
-
 	public void Capture()
 	{
-		StartCoroutine(CaptureImage());
 		screenshotButton.enabled = false;
+		StartCoroutine(CaptureImage());
 	}
 
 	private IEnumerator CaptureImage()
 	{
-		if (Application.isEditor)
-			ScreenCapture.CaptureScreenshot(image_path);
-		else
-			PhotoCapture.CreateAsync(false, OnPhotoCaptureCreated);
+		ScreenCapture.CaptureScreenshot(image_path);
 		yield return new WaitForSeconds(1);
 
 		var screenshotTexture = new Texture2D(2, 2);

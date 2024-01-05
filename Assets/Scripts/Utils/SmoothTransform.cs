@@ -1,21 +1,37 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class SmoothTransform : MonoBehaviour
 {
 	public float smoothingTime = 0.666f;
+
+	public AnimationCurve smoothingFunction = AnimationCurve.EaseInOut(0, 0, 1, 1);
 	private Vector3 _smoothPosition = Vector3.zero;
 	private Quaternion _smoothRotation = Quaternion.identity;
 	private Vector3 _smoothScale = Vector3.one;
 	private Vector3 _startPosition;
 	private Quaternion _startRotation;
 	private Vector3 _startScale;
-	private float _time = 0;
+	private float _time;
 
-	public AnimationCurve smoothingFunction = AnimationCurve.EaseInOut(0, 0, 1, 1);
+	private void Start()
+	{
+		_smoothPosition = _startPosition = transform.position;
+		_smoothRotation = _startRotation = transform.rotation;
+		_smoothScale = _startScale = transform.localScale;
+	}
+
+	private void Update()
+	{
+		if (_time < 0 || _time >= smoothingTime) return;
+
+		var t = smoothingFunction.Evaluate(_time / smoothingTime);
+		transform.position = Vector3.Lerp(_startPosition, _smoothPosition, t);
+		transform.rotation = Quaternion.Lerp(_startRotation, _smoothRotation, t);
+		transform.localScale = Vector3.Lerp(_startScale, _smoothScale, t);
+
+		_time = Math.Clamp(_time + Time.deltaTime, 0, smoothingTime);
+	}
 
 	// public Vector3 SmoothPosition
 	// {
@@ -54,25 +70,6 @@ public class SmoothTransform : MonoBehaviour
 		_startPosition = transform.position;
 		_startRotation = transform.rotation;
 		_startScale = transform.localScale;
-	}
-
-	private void Start()
-	{
-		_smoothPosition = _startPosition = transform.position;
-		_smoothRotation = _startRotation = transform.rotation;
-		_smoothScale = _startScale = transform.localScale;
-	}
-
-	private void Update()
-	{
-		if (_time < 0 || _time >= smoothingTime) return;
-
-		var t = smoothingFunction.Evaluate(_time / smoothingTime);
-		transform.position = Vector3.Lerp(_startPosition, _smoothPosition, t);
-		transform.rotation = Quaternion.Lerp(_startRotation, _smoothRotation, t);
-		transform.localScale = Vector3.Lerp(_startScale, _smoothScale, t);
-
-		_time = Math.Clamp(_time + Time.deltaTime, 0, smoothingTime);
 	}
 
 	public void SetPosition(Vector3 position, bool instantaneous = false)
