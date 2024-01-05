@@ -12,6 +12,7 @@ using Microsoft.Azure.ObjectAnchors.Unity;
 using UnityEngine;
 using UnityEngine.Events;
 #if WINDOWS_UWP
+using System.IO;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Storage.Search;
