@@ -277,9 +277,9 @@ minutes, but will be faster (around 1-10 minutes) on subsequent builds.
 ### Build Step 3: Deploy to HoloLens
 
 Once the solution is built, turn on your HL and unlock it. Make sure your
-PC/laptop are connected to the same network, and press  **Start without
-Debugging
-**![Start without Debugging](./README.assets/start-without-debugging.png)in
+PC/laptop are connected to the same network, and press **Start without
+Debugging**
+![Start without Debugging](./README.assets/start-without-debugging.png)in
 Visual Studio. This should automatically upload the code to your HL and start
 the application. This process takes usually around 2 minutes (depending on the
 executable size).
