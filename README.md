@@ -222,5 +222,12 @@ Once the solution is built, turn on your HL and unlock it. Make sure your PC/lap
 **Citation:**
 
 ```
-@misc{Mantovani_Salsi_de_los_Santos_Gausí_Vögeli_2024, title={SBB: Preventive/Predictive Maintenance with AR Assistant}, url={https://gitlab.ethz.ch/mr-23/sbb-mixed-reality}, journal={ETHZ - Mixed Reality Fall Semester 2023 - SBB: Preventive/Predictive Maintenance with AR Assistant}, author={Mantovani, Federico and Salsi, Leonardo and de los Santos Gausí, Diego and Vögeli, Luca}, year={2024}, month={Jan}} 
+@misc{Mantovani_Salsi_de_los_Santos_Gausí_Vögeli_2024, 
+  title={SBB: Preventive/Predictive Maintenance with AR Assistant},
+  url={https://gitlab.ethz.ch/mr-23/sbb-mixed-reality},
+  journal={ETHZ - Mixed Reality Fall Semester 2023},
+  author={Mantovani, Federico and Salsi, Leonardo and de los Santos Gausí, Diego and Vögeli, Luca},
+  year={2024}, 
+  month={Jan}
+} 
 ```
