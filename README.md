@@ -1,5 +1,11 @@
 # SBB Mixed Reality
 
+![SBB Mixed Reality](README.assets/mr-sbb-splash-image.png)
+
+## Contents
+
+[[_TOC_]]
+
 ## About
 
 **Project Title:** SBB: Preventive/Predictive Maintenance with AR Assistant
@@ -124,6 +130,16 @@ Object tracking is managed with the Azure Object Anchors SDK and the main entry 
 
 In order for AOA to work, you need to set your API credentials as mentioned in the Set-up section.
 
+##### Adding New AOA Models
+
+In order to track your own models, you first need to preprocess them with AOA, and then copy the trained model to the HL.
+
+1. Follow the steps [detailed here](https://learn.microsoft.com/en-us/azure/object-anchors/quickstarts/get-started-model-conversion) to convert your 3D model/scan to an AOA model. Supported file formats are `fbx`, `ply`, `obj`, and `glb`. We recommend using `glb`.
+2. Connect your HL via USB to your PC. You might need to enable additional options (cf. [Developer Mode](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/using-visual-studio?tabs=hl2)) on the HL before copying files to/from the HL is supported.
+3. Copy the newly created `.ou` files (AOA models) to the `3D Objects` library folder on the HoloLens. The application will automatically scan this directory for any files ending in `.ou` and register them as trackable objects.
+4. Import the visualization mesh (CAD model) into Unity. Open the `ObjectVisualization` prefab and add a new entry to the `ModelSwitcher.visualizationPrefabs` component from within the Unity editor. The `name` must match the filename of the `.ou` file (without extension). Once this AOA model is detected, the corresponding visualization mesh will be displayed.
+
+
 #### OCR
 
 For OCR we use the Azure AI Vision REST APIs using Unity’s built-in HTTP client. The main file is `OCRManager.cs` on the similarly named GameObject. Properties and methods are documented in the source code.
@@ -186,6 +202,8 @@ In the top bar, make sure that **Release** and **ARM64** are selected. Additiona
 2. Click the small arrow next to Remote Machine, and then select **SBB Mixed Reality MRTK3 Debug Properties** and select the  **Debugging** subsection.
 3. Paste your HL’s IP into the **Machine Name** field. Press “OK” to apply.
 
+You may have to [enable developer mode](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/using-visual-studio?tabs=hl2) before being able to deploy to the HL over WiFi.
+
 ##### Build
 
 Build the solution by clicking `Build > Build Solution` or by using <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd>. The first build can take up to 30 minutes, but will be faster (around 1-10 minutes) on subsequent builds.
@@ -193,3 +211,16 @@ Build the solution by clicking `Build > Build Solution` or by using <kbd>Ctrl</k
 #### Build Step 3: Deploy to HoloLens
 
 Once the solution is built, turn on your HL and unlock it. Make sure your PC/laptop are connected to the same network, and press  **Start without Debugging** ![Start without Debugging](./README.assets/start-without-debugging.png) in Visual Studio. This should automatically upload the code to your HL and start the application. This process takes usually around 2 minutes (depending on the executable size).
+
+## Authors
+
+- [Federico Mantovani](mailto:fmantova@ethz.ch)
+- [Leonardo Salsi](mailto:salsil@ethz.ch)
+- [Diego de los Santos Gausí](mailto:dgausi@ethz.ch)
+- [Luca Vögeli](mailto:lvoegeli@ethz.ch)
+
+**Citation:**
+
+```
+@misc{Mantovani_Salsi_de_los_Santos_Gausí_Vögeli_2024, title={SBB: Preventive/Predictive Maintenance with AR Assistant}, url={https://gitlab.ethz.ch/mr-23/sbb-mixed-reality}, journal={ETHZ - Mixed Reality Fall Semester 2023 - SBB: Preventive/Predictive Maintenance with AR Assistant}, author={Mantovani, Federico and Salsi, Leonardo and de los Santos Gausí, Diego and Vögeli, Luca}, year={2024}, month={Jan}} 
+```
