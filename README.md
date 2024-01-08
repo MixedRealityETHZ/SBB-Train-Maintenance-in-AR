@@ -11,7 +11,36 @@
 
 # Contents
 
-[TOC]
+<!-- TOC -->
+* [Contents](#contents)
+* [About](#about)
+* [Development “Quick”start](#development-quickstart)
+  * [Requirements and Set-up](#requirements-and-set-up)
+    * [:computer: Operating System](#computer-operating-system)
+    * [:video_game: Unity](#video_game-unity)
+    * [:wrench: Visual Studio](#wrench-visual-studio)
+    * [:cloud: Microsoft Azure](#cloud-microsoft-azure)
+      * [Setting up Azure Object Anchors](#setting-up-azure-object-anchors)
+      * [Setting up Azure AI Visions](#setting-up-azure-ai-visions)
+    * [:camera: 3D Object Capture](#camera-3d-object-capture)
+  * [Project Setup](#project-setup)
+    * [Project Structure](#project-structure)
+  * [Components](#components)
+    * [Object Tracking](#object-tracking)
+      * [Adding New AOA Models](#adding-new-aoa-models)
+    * [OCR](#ocr)
+    * [UI](#ui)
+  * [Deploying](#deploying)
+    * [Build Step 1: Build Unity Project](#build-step-1-build-unity-project)
+      * [First-time Setup](#first-time-setup)
+      * [Build](#build)
+    * [Build Step 2: Build Visual Studio Solution](#build-step-2-build-visual-studio-solution)
+      * [First-time Setup](#first-time-setup-1)
+      * [Build](#build-1)
+    * [Build Step 3: Deploy to HoloLens](#build-step-3-deploy-to-hololens)
+* [File Downloads](#file-downloads)
+* [Contact](#contact)
+<!-- TOC -->
 
 # About
 
