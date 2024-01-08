@@ -11,7 +11,7 @@
 
 # Contents
 
-[[_TOC_]]
+[TOC]
 
 # About
 
