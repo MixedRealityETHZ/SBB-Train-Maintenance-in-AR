@@ -284,6 +284,16 @@ Visual Studio. This should automatically upload the code to your HL and start
 the application. This process takes usually around 2 minutes (depending on the
 executable size).
 
+# File Downloads
+
+If you want to re-use our files for 3D models, Azure Object Anchor models, or
+installer/package files, you can find a collection of such files in this shared
+folder:
+
+- [PolyBox File Downloads](https://polybox.ethz.ch/index.php/s/12Hbol0WzZUxl9m)
+
+You will need a valid ETHZ account to access these files.
+
 # Contact
 
 - [Federico Mantovani](mailto:fmantova@ethz.ch)
